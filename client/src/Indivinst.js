@@ -9,6 +9,7 @@ import {
 
 import {retrievePaths} from './utils/bpagePipelineHelper';
 import Bpages from './components/bpages';
+import MoneyButtonLogin from './components/MoneyButtonLogin';
 //import Login from './components/login';
 import AllBpages from './components/allBpages';
 import QuickLogin from './components/quickLogin';
@@ -25,7 +26,7 @@ const App = () => {
   const [Authenticated, setAuthenticated] = useState(false);
   const AuthenticatedContextValue = {Authenticated, setAuthenticated};
 
-  const baseURL = ''; //https://api.ericbpage.us  //or empty quote
+  const baseURL = (typeof window !== 'undefined') && (!window.location.href.includes('localhost')) ? 'https://api.indivinst.com' : '';
 
   useEffect(() => {
     getPinBpages();
@@ -131,8 +132,12 @@ const App = () => {
                 <Switch>
                   {/* <Route
                     path={'/login'}
-                    render={routeProps => <Login {...routeProps} baseURL={this.state.baseURL} />}
+                    render={routeProps => <Login {...routeProps} baseURL={baseURL} />}
                   />*/}
+                  <Route
+                    path={'/moneybuttonlogin'}
+                    render={routeProps => <MoneyButtonLogin {...routeProps} baseURL={baseURL} />}
+                  />
                   <Route
                     path={'/allbpages'}
                     render={routeProps => (
