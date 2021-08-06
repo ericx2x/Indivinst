@@ -1,0 +1,150 @@
+.Indivinst {
+  text-align: center;
+}
+
+.Indivinst-logo {
+  animation: Indivinst-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.Indivinst-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.Indivinst-title {
+  font-size: 1.5em;
+}
+
+.Indivinst-intro {
+  font-size: large;
+}
+
+@keyframes Indivinst-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.leftSide,
+.rightSide {
+  display: inline-block;
+  vertical-align: top;
+  /*margin: 0 auto;*/
+}
+
+.leftSide {
+  max-width: 680px;
+  display: inline-block;
+}
+.rightSide {
+  width: 100%;
+}
+
+.makeCenter {
+  margin: 0 auto;
+}
+
+.messageSubmit-button,
+.verificationMessage {
+  display: inline-block;
+}
+
+.verificationMessage {
+  margin: 0 0 0 1em;
+}
+
+.verificationMessage:nth-child(2) {
+  margin: 0 0 0 1em;
+}
+
+.createBpage textarea {
+  width: 100%;
+  min-width: 510px;
+  height: 800px;
+}
+
+.topRow {
+  display: block;
+}
+
+.pure-button-primary.bar-button,
+.pure-button-primary.deleteBpage-button {
+  margin: 0 0 0 1em;
+}
+
+.pure-button-primary.logout-button {
+  margin: 10px 0 0 1em;
+}
+
+.pure-button-primary.toggleRed-button {
+  background: red;
+}
+
+.pure-button-primary.deleteBpage-button {
+  background: red;
+}
+
+.subbpages-list {
+  padding: 0;
+}
+
+.subbpages-list li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.backToParent {
+  margin: 14px 0;
+  text-decoration: none;
+  color: black;
+}
+.backToParent span{
+  font-size: 34px;
+  line-height: 13px;
+  vertical-align: top;
+}
+
+.menu-link.loggedIn {
+  background: rgba(31, 141, 214, 0.5);
+}
+
+/**********allbpages*************/
+.allbpages {
+  list-style: none;
+}
+.allbpages li a {
+  color: black;
+}
+.allbpages li:nth-of-type(2n) a {
+  background: #e0e0e0;
+}
+.allbpages li a:hover {
+  background-color: #333;
+  color: white;
+}
+
+@media (min-width: 48em) {
+  .bpageContent {
+    display: flex;
+    justify-content: center;
+  }
+  .leftSide {
+    min-width: 250px;
+  }
+  .rightSide {
+    min-width: 250px;
+    width: 680px;
+    padding: 0 20px 0 20px;
+  }
+}
+
+/************Quick Login ****************/
+.pure-form fieldset.quickLog{
+  margin-left: 10px;
+}

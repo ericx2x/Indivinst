@@ -1,0 +1,45 @@
+{
+  "name": "indivinst",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "testx_m": "nyc mocha --require babel-core/register",
+    "test_m": "nyc mocha",
+    "build": "babel src/ -d lib/",
+    "test": "jest --watchAll",
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-flow": "^6.23.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "body-parser": "^1.18.3",
+    "chai": "^4.1.2",
+    "connect-redis": "^3.3.3",
+    "cookie-parser": "~1.4.3",
+    "cors": "^2.8.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "express-mysql-session": "^1.3.0",
+    "express-session": "^1.15.6",
+    "http-errors": "~1.6.2",
+    "jade": "~1.11.0",
+    "md5": "^2.2.1",
+    "mocha": "^5.0.1",
+    "morgan": "^1.9.1",
+    "mysql": "^2.0.0",
+    "mysql2": "^1.5.3",
+    "nodemon": "~1.17.4",
+    "sha256": "^0.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "babel-jest": "^24.8.0",
+    "jest": "^24.8.0",
+    "nyc": "^11.7.2"
+  }
+}
