@@ -12,16 +12,16 @@ const QuickLogin = props => {
   const [incorrectPassword, setIncorrectPassword] = useState('');
 
   useEffect(() => {
-    axios
-      .get(`${props.baseURL}/api/password/${pass}`)
-      .then(response => {
-        if (response.data.logged) {
-          setAuthenticated(true);
-        }
-      })
-      .catch(function (error) {
-        return JSON.stringify(error);
-      });
+    //axios
+      //.get(`${props.baseURL}/api/password/${pass}`)
+      //.then(response => {
+        //if (response.data.logged) {
+          //setAuthenticated(true);
+        //}
+      //})
+      //.catch(function (error) {
+        //return JSON.stringify(error);
+      //});
   }, []);
 
   const handleSubmitPass = e => {

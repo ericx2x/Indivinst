@@ -9,12 +9,12 @@ import {
 
 import {retrievePaths} from './utils/bpagePipelineHelper';
 import Bpages from './components/bpages';
-import MoneyButtonLogin from './components/MoneyButtonLogin';
+import MoneyButtonLogin from './components/moneyButtonLogin';
 //import Login from './components/login';
 import AllBpages from './components/allBpages';
 import QuickLogin from './components/quickLogin';
 import axios from 'axios';
-import './App.css';
+import './Indivinst.css';
 
 axios.defaults.withCredentials = true;
 
@@ -29,7 +29,7 @@ const App = () => {
   const baseURL = (typeof window !== 'undefined') && (!window.location.href.includes('localhost')) ? 'https://api.indivinst.com' : '';
 
   useEffect(() => {
-    getPinBpages();
+    //getPinBpages();//may need to reenable this later
   }, []);
 
   const getPinBpages = async () => {
@@ -103,7 +103,7 @@ const App = () => {
                       activeClassName="pure-menu-selected"
                       className="pure-menu-heading"
                       to="/">
-                      Eric's Bpages
+                      Indivinst
                     </NavLink>
                     <ul className="pure-menu-list">
                       <QuickLogin baseURL={baseURL} setAuthenticated={setAuthenticated} />
@@ -115,6 +115,11 @@ const App = () => {
                       <li className="pure-menu-item" key="1">
                         <a className="pure-menu-link" href={`/allBpages`}>
                           All Bpages
+                        </a>
+                      </li>
+                      <li className="pure-menu-item" key="2">
+                        <a className="pure-menu-link" href={`/moneyButtonLogin`}>
+                          MoneyButtonLogin
                         </a>
                       </li>
                       {pinBpages.map((bpage, index) => {
@@ -135,7 +140,11 @@ const App = () => {
                     render={routeProps => <Login {...routeProps} baseURL={baseURL} />}
                   />*/}
                   <Route
-                    path={'/moneybuttonlogin'}
+                    path={'/MoneyButtonLogin'}
+                    render={routeProps => <MoneyButtonLogin {...routeProps} baseURL={baseURL} />}
+                  />
+                  <Route
+                    path={'/oauth-response-web'}
                     render={routeProps => <MoneyButtonLogin {...routeProps} baseURL={baseURL} />}
                   />
                   <Route

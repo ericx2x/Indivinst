@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 const { MoneyButtonClient } = require('@moneybutton/api-client')
 //const mbClient = new MoneyButtonClient("9becf316ca7bad801f6d30b563e01dd4", "70abe5cd2fff168bba3b6b4e52ffdd11")
-const mbClient = new MoneyButtonClient("115c92e4b0101ca3a7404b472053c8b2")
+const mbClient = new MoneyButtonClient("ab0a912ef51c1cc9bd6d7d9433fbc3c0"); //store this id in a new money button app after testing is done//oauth identifier
 const refreshToken = mbClient.getRefreshToken();
 
 axios.defaults.withCredentials = true;
@@ -24,7 +24,7 @@ axios.defaults.withCredentials = true;
     //});
   }
 
-class MoneyButtonLogic extends Component {
+class MoneyButtonLogin extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -62,8 +62,8 @@ class MoneyButtonLogic extends Component {
 
     return (
       <div className="homepage">
-        MoneyButtonLogic <br />
-        {/*<a href={`https://www.moneybutton.com/oauth/v1/authorize?response_type=code&client_id=9becf316ca7bad801f6d30b563e01dd4&redirect_uri=http://localhost:9008/oauth-response-web&scope=auth.user_identity:read&state=${r}`}>oAuth</a><br />*/}
+        MoneyButtonLogin <br />
+        {/*<a href={`https://www.moneybutton.com/oauth/v1/authorize?response_type=code&client_id=f52cf7a08024d7d663e65fecd0152fe7&redirect_uri=http://localhost:9008/oauth-response-web&scope=auth.user_identity:read&state=${r}`}>oAuth</a><br />*/}
 
         <a href='' onClick={this.handleMBRequestAuthorization}>oAuth</a>
       </div>
@@ -71,5 +71,5 @@ class MoneyButtonLogic extends Component {
   }
 }
 
-export default MoneyButtonLogic;
+export default MoneyButtonLogin;
 
