@@ -4,7 +4,8 @@ const {MoneyButtonClient} = require('@moneybutton/client');
 //const mbClient = new MoneyButtonClient("9becf316ca7bad801f6d30b563e01dd4", "70abe5cd2fff168bba3b6b4e52ffdd11")
 const mbClient = new MoneyButtonClient('ab0a912ef51c1cc9bd6d7d9433fbc3c0'); //store this id in a new money button app after testing is done//oauth identifier
 const refreshToken = mbClient.getRefreshToken();
-//let bsv = require('bsv');
+//import bsv from 'bsv';
+let bsv = require('bsv');
 let MoneyButton = require('@moneybutton/react-money-button').default;
 
 axios.defaults.withCredentials = true;

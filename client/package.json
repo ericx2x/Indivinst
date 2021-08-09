@@ -9,7 +9,7 @@
     "@moneybutton/config": "^0.38.5",
     "@moneybutton/react-money-button": "^0.38.8",
     "axios": "^0.17.1",
-    "bsv": "^2.0.10",
+    "bsv": "2.0.10",
     "cors": "^2.8.4",
     "draft-js": "^0.10.5",
     "md5": "^2.2.1",
