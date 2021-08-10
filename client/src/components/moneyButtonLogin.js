@@ -31,6 +31,7 @@ const MoneyButtonLogin = () => {
   const handleMBRequestAuthorization = () => {
     mbClient.requestAuthorization(
       'auth.user_identity:read users.profiles:read users.balance:read',
+      'http://localhost:9008/oauth-response-web'
     );
 
     //TODO: go from here below
