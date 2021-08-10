@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import axios from 'axios';
-const {MoneyButtonClient} = require('@moneybutton/client');
+const {MoneyButtonClient} = require('@moneybutton/api-client');
 //const mbClient = new MoneyButtonClient("9becf316ca7bad801f6d30b563e01dd4", "70abe5cd2fff168bba3b6b4e52ffdd11")
 const mbClient = new MoneyButtonClient('ab0a912ef51c1cc9bd6d7d9433fbc3c0'); //store this id in a new money button app after testing is done//oauth identifier
 const refreshToken = mbClient.getRefreshToken();
@@ -28,11 +28,9 @@ const retrieveMbData = async () => {
 };
 
 const MoneyButtonLogin = () => {
-  const handleMBRequestAuthorization = e => {
-    e.preventDefault();
+  const handleMBRequestAuthorization = () => {
     mbClient.requestAuthorization(
       'auth.user_identity:read users.profiles:read users.balance:read',
-      'http://localhost:9008/oauth-response-web',
     );
 
     //TODO: go from here below
@@ -45,6 +43,7 @@ const MoneyButtonLogin = () => {
   retrieveMbData();
   mbClient.setRefreshToken(refreshToken);
   //console.log('moneybyttondocs', bsv);
+  console.log('moneybyttondocs', bsv.Script.buildSafeDataOut(['moneybutton.com', 'utf8', 'hello. how are you?']).toASM());
   //mbClient.handleAuthorizationResponse().then(() => {
   //mbClient.getIdentity();
   //console.log('idi', mbClient.getIdentity())
@@ -58,15 +57,15 @@ const MoneyButtonLogin = () => {
     <div className="homepage">
       MoneyButtonLogin <br />
       {/*<a href={`https://www.moneybutton.com/oauth/v1/authorize?response_type=code&client_id=f52cf7a08024d7d663e65fecd0152fe7&redirect_uri=http://localhost:9008/oauth-response-web&scope=auth.user_identity:read&state=${r}`}>oAuth</a><br />*/}
-      <a href="" onClick={handleMBRequestAuthorization}>
-        oAuth
-      </a>
+      <button onClick={(e) => handleMBRequestAuthorization(e)}>
+        oAuth MoneyButton API data retrival
+      </button>
       <div>
         <MoneyButton
-          //to={'reinhardt@moneybutton.com'}//'paymail', 'user ID', 'address', 'or script'
-          script={
-            'OP_FALSE OP_RETURN 6d6f6e6579627574746f6e2e636f6d 75746638 68656c6c6f2e20686f772061726520796f753f'
-          }
+          to={'reinhardt@moneybutton.com'}//'paymail', 'user ID', 'address', 'or script'
+          //script={
+            //'OP_FALSE OP_RETURN 6d6f6e6579627574746f6e2e636f6d 75746638 68656c6c6f2e20686f772061726520796f753f'
+          //}
           amount={'.01'}
           currency={'USD'}
         />
@@ -76,3 +75,4 @@ const MoneyButtonLogin = () => {
 };
 
 export default MoneyButtonLogin;
+

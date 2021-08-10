@@ -13,6 +13,7 @@ import MoneyButtonLogin from './components/moneyButtonLogin';
 //import Login from './components/login';
 import AllBpages from './components/allBpages';
 import QuickLogin from './components/quickLogin';
+import MetaHead from './components/MetaHead';
 import axios from 'axios';
 import './Indivinst.css';
 
@@ -26,14 +27,19 @@ const App = () => {
   const [Authenticated, setAuthenticated] = useState(false);
   const AuthenticatedContextValue = {Authenticated, setAuthenticated};
 
-  const baseURL = (typeof window !== 'undefined') && (!window.location.href.includes('localhost')) ? 'https://api.indivinst.com' : '';
+  const baseURL =
+    typeof window !== 'undefined' && !window.location.href.includes('localhost')
+      ? 'https://api.indivinst.com'
+      : '';
 
   useEffect(() => {
     //getPinBpages();//may need to reenable this later
   }, []);
 
   const getPinBpages = async () => {
-    const pinBpagesCallback = await axios.get(`${baseURL}/api/bpages/pinBpages/`);
+    const pinBpagesCallback = await axios.get(
+      `${baseURL}/api/bpages/pinBpages/`,
+    );
 
     pinBpagesCallback.data.map(async bpage => {
       const thepath = await retrievePaths(bpage.name, bpage.namepid, baseURL);
@@ -85,6 +91,7 @@ const App = () => {
 
   return (
     <AuthenticatedContext.Provider value={AuthenticatedContextValue}>
+      <MetaHead />
       <div id="layout" className={`${activeMenu}`}>
         <div id="main">
           <div className="content">
@@ -106,26 +113,28 @@ const App = () => {
                       Indivinst
                     </NavLink>
                     <ul className="pure-menu-list">
-                      <QuickLogin baseURL={baseURL} setAuthenticated={setAuthenticated} />
-                      {/*<li className="pure-menu-item" key="0">
-                      <a className="pure-menu-link" href={`/login`}>
-                        Login
-                      </a>
-                    </li>*/}
+                      <QuickLogin
+                        baseURL={baseURL}
+                        setAuthenticated={setAuthenticated}
+                      />
                       <li className="pure-menu-item" key="1">
                         <a className="pure-menu-link" href={`/allBpages`}>
                           All Bpages
                         </a>
                       </li>
                       <li className="pure-menu-item" key="2">
-                        <a className="pure-menu-link" href={`/moneyButtonLogin`}>
+                        <a
+                          className="pure-menu-link"
+                          href={`/moneyButtonLogin`}>
                           MoneyButtonLogin
                         </a>
                       </li>
                       {pinBpages.map((bpage, index) => {
                         return (
                           <li className="pure-menu-item" key={index}>
-                            <a className="pure-menu-link" href={`/${bpage.url}`}>
+                            <a
+                              className="pure-menu-link"
+                              href={`/${bpage.url}`}>
                               {toTitleCase(bpage.name)}
                             </a>
                           </li>
@@ -135,17 +144,23 @@ const App = () => {
                   </div>
                 </div>
                 <Switch>
-                  {/* <Route
-                    path={'/login'}
-                    render={routeProps => <Login {...routeProps} baseURL={baseURL} />}
-                  />*/}
                   <Route
                     path={'/MoneyButtonLogin'}
-                    render={routeProps => <MoneyButtonLogin {...routeProps} baseURL={baseURL} />}
+                    render={routeProps => (
+                      <MoneyButtonLogin {...routeProps} baseURL={baseURL} />
+                    )}
                   />
                   <Route
                     path={'/oauth-response-web'}
-                    render={routeProps => <MoneyButtonLogin {...routeProps} baseURL={baseURL} />}
+                    render={routeProps => (
+                      <MoneyButtonLogin {...routeProps} baseURL={baseURL} />
+                    )}
+                  />
+                  <Route
+                    path={'/oauth/v1/authorize'}
+                    render={routeProps => (
+                      <MoneyButtonLogin {...routeProps} baseURL={baseURL} />
+                    )}
                   />
                   <Route
                     path={'/allbpages'}

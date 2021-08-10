@@ -10,6 +10,7 @@
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "@moneybutton/api-client": "github:moneybutton/api-client",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2015": "^6.24.1",
@@ -17,7 +18,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-register": "^6.26.0",
     "body-parser": "^1.18.3",
-    "bsv": "^2.0.10",
+    "bsv": "2.0.10",
     "chai": "^4.1.2",
     "connect-redis": "^3.3.3",
     "cookie-parser": "~1.4.3",
