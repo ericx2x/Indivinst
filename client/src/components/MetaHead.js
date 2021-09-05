@@ -4,9 +4,9 @@ import {Helmet} from 'react-helmet';
 const MetaHead = () => {
   return (
     <Helmet>
-      <script
+      {/*<script
         type="text/javascript"
-        src="https://unpkg.com/bsv@0.30.0/bsv.min.js"></script>
+        src="https://unpkg.com/bsv@0.30.0/bsv.min.js"></script>*/}
     </Helmet>
   );
 };
