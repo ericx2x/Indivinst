@@ -22,11 +22,6 @@ const MoneyButtonLogin = () => {
       'auth.user_identity:read users.profiles:read users.balance:read',
       'http://localhost:9008/oauth-response-web',
     );
-
-    //TODO: go from here below
-    //mbClient.handleAuthorizationResponse().then(() => {
-    //mbClient.getIdentity().then(res => {
-    //mbClient.getUserProfile(res.id).then(res => {
   };
 
   const retrieveMbData = async () => {
@@ -72,6 +67,7 @@ const MoneyButtonLogin = () => {
       //res.body.pipe(process.stdout);
     });
   };
+
   const centrifugeCodeScaleTransactions = () => {
     let txObj = [];
     const getBlock = async (height, hash) => {
@@ -113,8 +109,7 @@ const MoneyButtonLogin = () => {
       console.log('xlr', {looptimes}, {remainder});
 
       let x = 0;
-      let temp = []
-        ;
+      let temp = [];
       for (let i = 0; i < looptimes; i++) {
         for (let j = 0; j < 20; j++) {
           temp.push(tx[x]);
@@ -147,27 +142,27 @@ const MoneyButtonLogin = () => {
       //console.log('last', {temp});
 
       //reimplemented
-        const remainderRes = await (
-          await fetch(`https://api.whatsonchain.com/v1/bsv/main/txs/hex`, {
-            method: 'post',
-            body: JSON.stringify({txids: temp}),
-          })
-        ).json();
-        console.log('dsRemainderRes', {res});
-        temp = [];
+      const remainderRes = await (
+        await fetch(`https://api.whatsonchain.com/v1/bsv/main/txs/hex`, {
+          method: 'post',
+          body: JSON.stringify({txids: temp}),
+        })
+      ).json();
+      console.log('dsRemainderRes', {res});
+      temp = [];
 
-        remainderRes.forEach(t => {
-          if (t.hex.includes('73656e7369626c65')) {
-            txObj.push({
-              txid: t.txid,
-              hex: t.hex,
-            });
-          }
-        });
-        console.log({txObj});
+      remainderRes.forEach(t => {
+        if (t.hex.includes('73656e7369626c65')) {
+          txObj.push({
+            txid: t.txid,
+            hex: t.hex,
+          });
+        }
+      });
+      console.log({txObj});
 
-      if(res.nextblockhash) {
-          await getBlock(null, res.nextblockhash);
+      if (res.nextblockhash) {
+        await getBlock(null, res.nextblockhash);
       }
     };
 
@@ -175,8 +170,6 @@ const MoneyButtonLogin = () => {
   };
 
   const centrifugeCode = () => {
-    //TODO: Read up on jHenslee tutorial again: https://developers.whatsonchain.com/#block
-    //TODO: create your own address by following these docs
     //https://docs.moneybutton.com/docs/bsv/bsv-private-key.html
     //then keep watching j.henslee's videos on how to read opreturn data from a bsv address
     //You left off at 3.30 mins in:
@@ -237,6 +230,8 @@ const MoneyButtonLogin = () => {
     //centrifuge.connect();
   };
 
+  //TODO: maybe a third centrifugecode functoin that will retrieve the transaction id given by the myOnPaymentCallback function
+
   useEffect(() => {
     retrieveMbData();
     mbClient.setRefreshToken(refreshToken);
@@ -252,15 +247,21 @@ const MoneyButtonLogin = () => {
     //opReturnDataAsm = opReturnDataAsm.substring(1);
     //}
 
-    //console.log('moneybyttondocs', opReturnDataAsm);
+    console.log('moneybyttondocs', opReturnDataAsm);
     setOpReturnData(opReturnDataAsm);
-
-
 
     //bitBusCode();
     //centrifugeCodeScaleTransactions();
-    centrifugeCode();
+    //centrifugeCode();
   }, []);
+
+  const myCustomCallback = payment => {
+    console.log('A payment has occurred!', payment);
+  };
+
+  function myOnPaymentCallback(payment) {
+    console.log('A psayment has occurred!', payment);
+  }
 
   return (
     <div className="homepage">
@@ -292,8 +293,9 @@ const MoneyButtonLogin = () => {
           //script={
           //'OP_FALSE OP_RETURN 6d6f6e6579627574746f6e2e636f6d 75746638 68656c6c6f2e20686f772061726520796f753f'
           //}
-          amount={'0.00000145'}
+          amount={'0.00000145'} //increase/decrease this depending on the date miners may not accept transactions that are too low.
           currency={'BSV'}
+          onPayment={myOnPaymentCallback}
         />
       </div>
     </div>
