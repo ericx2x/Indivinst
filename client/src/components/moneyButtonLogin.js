@@ -72,7 +72,7 @@ const MoneyButtonLogin = () => {
       //res.body.pipe(process.stdout);
     });
   };
-  const centrifugeCode2 = () => {
+  const centrifugeCodeScaleTransactions = () => {
     let txObj = [];
     const getBlock = async (height, hash) => {
       let res,
@@ -245,7 +245,7 @@ const MoneyButtonLogin = () => {
     let opReturnDataAsm = bsv.Script.buildSafeDataOut([
       'reinhardt@moneybutton.com',
       'utf8',
-      'Hello. How are you? 2',
+      'Hello. How are you? Save this address to a mysql database',
     ]).toASM();
 
     //while (opReturnDataAsm.charAt(0) === '0') {
@@ -255,9 +255,11 @@ const MoneyButtonLogin = () => {
     //console.log('moneybyttondocs', opReturnDataAsm);
     setOpReturnData(opReturnDataAsm);
 
+
+
     //bitBusCode();
-    centrifugeCode2();
-    //centrifugeCode();
+    //centrifugeCodeScaleTransactions();
+    centrifugeCode();
   }, []);
 
   return (
@@ -290,7 +292,7 @@ const MoneyButtonLogin = () => {
           //script={
           //'OP_FALSE OP_RETURN 6d6f6e6579627574746f6e2e636f6d 75746638 68656c6c6f2e20686f772061726520796f753f'
           //}
-          amount={'0.00000135'}
+          amount={'0.00000145'}
           currency={'BSV'}
         />
       </div>
