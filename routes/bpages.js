@@ -21,7 +21,7 @@ con.connect(function (err) {
 
 //START OF AUTOSETUP
 
-//var sql = "CREATE TABLE bpages (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), message longtext, date_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, date_modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, private BOOLEAN DEFAULT FALSE, pid INT, namepid VARCHAR(255) UNIQUE NOT NULL, pin BOOLEAN DEFAULT FALSE)";
+//var sql = "CREATE TABLE bpages (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), transaction_id VARCHAR(255) DEFAULT 0, message longtext, date_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, date_modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, private BOOLEAN DEFAULT FALSE, pid INT, namepid VARCHAR(255) UNIQUE NOT NULL, pin BOOLEAN DEFAULT FALSE)";
 //con.query(sql, function (err, result) {
 //if (err) throw err;
 //console.log("Bpages Table created");

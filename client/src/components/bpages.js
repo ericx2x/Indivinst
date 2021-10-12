@@ -3,6 +3,7 @@ import axios from 'axios';
 import {Link} from 'react-router-dom';
 import {checkIfBpageExists} from '../utils/bpagePipelineHelper';
 import {AuthenticatedContext} from '../Indivinst';
+import IndivinstMoneyButton from './indivinstMoneyButton';
 
 axios.defaults.withCredentials = true;
 
@@ -403,6 +404,7 @@ const Bpages = props => {
 
   return (
     <div className="bpages">
+      <IndivinstMoneyButton />
       <Link
         className="pure-button backToParent"
         to={props.match.url.substring(

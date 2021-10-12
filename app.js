@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/api/bpages', bpagessRouter);
+app.use('/api/bpages', bpagesRouter);
 app.use('/api/password', passwordRouter);
 
 
