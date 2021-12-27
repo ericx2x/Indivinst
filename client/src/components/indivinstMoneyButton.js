@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import {collectIdAndOrPostEachBranch} from '../utils/bpagePipelineHelper';
+
 const {MoneyButtonClient} = require('@moneybutton/api-client');
 const mbClient = new MoneyButtonClient('ab0a912ef51c1cc9bd6d7d9433fbc3c0'); //store this id in a new money button app after testing is done//oauth identifier
 const refreshToken = mbClient.getRefreshToken();
@@ -10,7 +12,7 @@ let MoneyButton = require('@moneybutton/react-money-button').default;
 axios.defaults.withCredentials = true;
 
 //TODO actually make this component polished and usable.
-const IndivinstMoneyButton = ({message}) => {
+const IndivinstMoneyButton = ({message, baseURL, params}) => {
   const [id, setId] = useState('');
   const [userProfile, setUserProfile] = useState('');
   const [balance, setBalance] = useState(0);
@@ -22,6 +24,22 @@ const IndivinstMoneyButton = ({message}) => {
       'http://localhost:9008/oauth-response-web',
     );
   };
+
+  //const updateBpageAndVerification = async (passedUpdateData, baseURL, params, txid) => {
+  //collectIdAndOrPostEachBranch(
+  //passedUpdateData,
+  //true,
+  //baseURL,
+  //params,
+  //txid
+  //);
+
+  ////setVerificationMessage('Message was saved.');
+  ////setValue(unescape(value));
+  ////setTimeout(() => {
+  ////setVerificationMessage('');
+  ////}, 2000);
+  //};
 
   const retrieveMbData = async () => {
     window.location.pathname.includes('oauth-response-web') &&
@@ -49,28 +67,50 @@ const IndivinstMoneyButton = ({message}) => {
 
     console.log('M', Buffer.from('moneybutton.com').toString('hex'));
 
-    console.log(
-      'X',
-      hexToAscii('57726974696e6731').toString(),
-    );
+    console.log('X', hexToAscii('57726974696e6731').toString());
+
+    console.log('Z', Buffer.from('57726974696e6731', 'hex').toString());
 
     let opReturnDataAsm = bsv.Script.buildSafeDataOut([
       'reinhardt@moneybutton.com',
       'utf8',
-      message, 
+      message,
     ]).toASM();
 
     console.log('moneybyttondocs', opReturnDataAsm);
     setOpReturnData(opReturnDataAsm);
   }, [message]);
 
+    function onbuttonclick() {
+    collectIdAndOrPostEachBranch(
+      'Hello From On Payment Callback2',
+      true,
+      baseURL,
+      params,
+      'fake txid',
+    );
+  }
+
+
   function myOnPaymentCallback(payment) {
-    console.log('A payment has occurred!', payment); //TODO: Save the txid to a database (probably bpages message) and try to get the op_return ending hex and convert it to the bpage messages
+    console.log('baseURL', baseURL);
+    console.log('params', params);
+    //updateBpageAndVerification(payment.txid, baseURL, params, payment.txid);
+    collectIdAndOrPostEachBranch(
+      'Hello From On Payment Callback2',
+      true,
+      baseURL,
+      params,
+      payment.txid,
+    );
+
+    console.log('A payment has occurred!', payment); //TODO: Save the txid to a database properly as right now it only saves per new page and does not update currnet page. Then try to use txid to get the op_return ending hex and convert it to the bpage messages
   }
 
   return (
     <div className="homepage">
       <h2>BpageMoneyButton </h2>
+      <button onClick={onbuttonclick}>Button to test</button>
       <br />
       Login Credentials:
       <br />
@@ -91,7 +131,7 @@ const IndivinstMoneyButton = ({message}) => {
         {opReturnData}
         <MoneyButton
           to={opReturnData} //address of an address when sending a tx back to reinhardt@moneybutton.com
-          amount={'0.00000145'} //increase/decrease this depending on the date miners may not accept transactions that are too low.
+          amount={'0.00000105'} //increase/decrease this depending on the date miners may not accept transactions that are too low.
           currency={'BSV'}
           onPayment={myOnPaymentCallback}
         />

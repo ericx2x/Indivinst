@@ -1,10 +1,12 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
-import {checkIfBpageExists} from '../utils/bpagePipelineHelper';
 import {AuthenticatedContext} from '../Indivinst';
 import IndivinstMoneyButton from './indivinstMoneyButton';
-import {collectIdAndOrPostEachBranch} from '../utils/bpagePipelineHelper';
+import {
+  collectIdAndOrPostEachBranch,
+  moveBpage,
+} from '../utils/bpagePipelineHelper';
 
 axios.defaults.withCredentials = true;
 
@@ -159,7 +161,12 @@ const Bpages = props => {
   };
 
   const updateBpageAndVerification = async passedUpdateData => {
-    collectIdAndOrPostEachBranch(passedUpdateData, true, props.baseURL,props.match.params);
+    collectIdAndOrPostEachBranch(
+      passedUpdateData,
+      true,
+      props.baseURL,
+      props.match.params,
+    );
 
     setVerificationMessage('Message was saved.');
     setValue(unescape(value));
@@ -226,7 +233,13 @@ const Bpages = props => {
       if (window.confirm('Really delete?')) {
         const deleteBpage = async () => {
           try {
-            const currBpageId = await collectIdAndOrPostEachBranch('');
+            const currBpageId = await collectIdAndOrPostEachBranch(
+              '',
+              false,
+              '',
+              props.match.params,
+            );
+            console.log('x', currBpageId);
             await axios.delete(`${props.baseURL}/api/bpages/${currBpageId}`);
             setVerificationMessage('Bpage Deleted');
             setTimeout(() => {
@@ -291,37 +304,6 @@ const Bpages = props => {
     display: !Authenticated ? 'none' : 'inline-block',
   };
 
-  const moveBpage = async () => {
-    var destination = prompt(
-      'Enter path to move bpage to',
-      'my/example/bpage/b',
-    );
-
-    if (destination === null || destination === '') {
-      alert('You did not enter the bpage field.');
-    } else {
-      destination = destination.split('/').filter(function (el) {
-        return el.length !== 0;
-      });
-      const bpageExistence = await checkIfBpageExists(
-        destination,
-        props.baseURL,
-      );
-      if (!bpageExistence) {
-        const oldPid = await collectIdAndOrPostEachBranch('');
-        collectIdAndOrPostEachBranch('', true, true, oldPid, destination);
-        const printDestination = destination.toString().replaceAll(',', '/');
-        setVerificationMessage(
-          'Bpage successfully moved to: ' + printDestination,
-        );
-      } else {
-        alert(
-          'Sorry a bpage already exists in that destination! Please, try a different destination',
-        );
-      }
-    }
-  };
-
   const setPinBpage = async () => {
     if (dataCurrentBpage.data[0]) {
       await axios.post(
@@ -346,7 +328,11 @@ const Bpages = props => {
 
   return (
     <div className="bpages">
-      <IndivinstMoneyButton message={value} />
+      <IndivinstMoneyButton
+        message={value}
+        baseURL={props.baseURL}
+        params={props.match.params}
+      />
       <Link
         className="pure-button backToParent"
         to={props.match.url.substring(
@@ -413,7 +399,15 @@ const Bpages = props => {
               {!!dateCreated && (
                 <button
                   className="pure-button pure-button-primary bar-button"
-                  onClick={moveBpage}>
+                  onClick={() => { //Fix this because it is not working
+                    alert(
+                      moveBpage(
+                        props.baseURL,
+                        props.match.params,
+                        setVerificationMessage,
+                      ),
+                    );
+                  }}>
                   Move / Rename
                 </button>
               )}
