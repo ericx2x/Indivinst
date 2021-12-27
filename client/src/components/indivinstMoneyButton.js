@@ -3,15 +3,14 @@ import axios from 'axios';
 const {MoneyButtonClient} = require('@moneybutton/api-client');
 const mbClient = new MoneyButtonClient('ab0a912ef51c1cc9bd6d7d9433fbc3c0'); //store this id in a new money button app after testing is done//oauth identifier
 const refreshToken = mbClient.getRefreshToken();
-var Centrifuge = require('centrifuge');
+//var Centrifuge = require('centrifuge');
 let bsv = require('bsv');
 let MoneyButton = require('@moneybutton/react-money-button').default;
 
 axios.defaults.withCredentials = true;
 
-
 //TODO actually make this component polished and usable.
-const IndivinstMoneyButton = () => {
+const IndivinstMoneyButton = ({message}) => {
   const [id, setId] = useState('');
   const [userProfile, setUserProfile] = useState('');
   const [balance, setBalance] = useState(0);
@@ -35,27 +34,43 @@ const IndivinstMoneyButton = () => {
     setBalance(JSON.stringify(balance));
   };
 
+  const hexToAscii = str1 => {
+    var hex = str1.toString();
+    var str = '';
+    for (var n = 0; n < hex.length; n += 2) {
+      str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+    }
+    return str;
+  };
+
   useEffect(() => {
     retrieveMbData();
     mbClient.setRefreshToken(refreshToken);
 
+    console.log('M', Buffer.from('moneybutton.com').toString('hex'));
+
+    console.log(
+      'X',
+      hexToAscii('57726974696e6731').toString(),
+    );
+
     let opReturnDataAsm = bsv.Script.buildSafeDataOut([
       'reinhardt@moneybutton.com',
       'utf8',
-      'Hello. How are you? Save this address to a mysql database',
+      message, 
     ]).toASM();
 
     console.log('moneybyttondocs', opReturnDataAsm);
     setOpReturnData(opReturnDataAsm);
-  }, []);
+  }, [message]);
 
   function myOnPaymentCallback(payment) {
-    console.log('A psayment has occurred!', payment);
+    console.log('A payment has occurred!', payment); //TODO: Save the txid to a database (probably bpages message) and try to get the op_return ending hex and convert it to the bpage messages
   }
 
   return (
     <div className="homepage">
-      <h2>MoneyButtonLogin </h2>
+      <h2>BpageMoneyButton </h2>
       <br />
       Login Credentials:
       <br />

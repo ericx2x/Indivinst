@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import {checkIfBpageExists} from '../utils/bpagePipelineHelper';
 import {AuthenticatedContext} from '../Indivinst';
 import IndivinstMoneyButton from './indivinstMoneyButton';
+import {collectIdAndOrPostEachBranch} from '../utils/bpagePipelineHelper';
 
 axios.defaults.withCredentials = true;
 
@@ -157,75 +158,8 @@ const Bpages = props => {
     return txt.value;
   };
 
-  const collectIdAndOrPostEachBranch = async (
-    passedUpdateData,
-    postBool,
-    updateCurrBpageId,
-    idNumber,
-    moveDirectory,
-  ) => {
-    let paths = Object.values(props.match.params);
-    if (moveDirectory) {
-      paths = moveDirectory;
-    }
-
-    let pid = 0;
-    let previousBpage;
-
-    for (let i = 0; i < paths.length; i++) {
-      if (i === 0) {
-        if (postBool) {
-          await axios.post(`${props.baseURL}/api/bpages/${paths[i]}`, {
-            messageData: passedUpdateData,
-            pid: 0,
-          });
-        }
-        previousBpage = await axios.get(
-          `${props.baseURL}/api/bpages/namepid/${paths[i]}/${pid}`,
-        );
-      } else {
-        pid = previousBpage.data[0].id;
-
-        if (postBool) {
-          await axios.post(`${props.baseURL}/api/bpages/${paths[i]}`, {
-            messageData: passedUpdateData,
-            pid: pid,
-          });
-        }
-
-        previousBpage = await axios.get(
-          `${props.baseURL}/api/bpages/namepid/${paths[i]}/${pid}`,
-        );
-      }
-    }
-
-    if (updateCurrBpageId) {
-      await axios.delete(
-        `${props.baseURL}/api/bpages/${previousBpage.data[0].id}`,
-      );
-      await axios.post(
-        `${props.baseURL}/api/bpages/updatePid/${paths[paths.length - 1]}/${
-          paths.length > 1 ? pid : 0
-        }/${idNumber}`,
-        {messageData: value},
-      );
-    }
-
-    if (postBool && !updateCurrBpageId) {
-      //This will only fire on a normal creation of a bpage and nothing to do with moving or renaming
-      await axios.post(
-        `${props.baseURL}/api/bpages/update/${props.match.params.id}/${
-          paths.length > 1 ? pid : 0
-        }`,
-        {messageData: passedUpdateData},
-      );
-    }
-
-    return previousBpage.data[0] ? previousBpage.data[0].id : 0;
-  };
-
   const updateBpageAndVerification = async passedUpdateData => {
-    collectIdAndOrPostEachBranch(passedUpdateData, true);
+    collectIdAndOrPostEachBranch(passedUpdateData, true, props.baseURL,props.match.params);
 
     setVerificationMessage('Message was saved.');
     setValue(unescape(value));
@@ -358,7 +292,10 @@ const Bpages = props => {
   };
 
   const moveBpage = async () => {
-    var destination = prompt('Enter path to move bpage to', 'my/example/bpage/b');
+    var destination = prompt(
+      'Enter path to move bpage to',
+      'my/example/bpage/b',
+    );
 
     if (destination === null || destination === '') {
       alert('You did not enter the bpage field.');
@@ -366,7 +303,10 @@ const Bpages = props => {
       destination = destination.split('/').filter(function (el) {
         return el.length !== 0;
       });
-      const bpageExistence = await checkIfBpageExists(destination, props.baseURL);
+      const bpageExistence = await checkIfBpageExists(
+        destination,
+        props.baseURL,
+      );
       if (!bpageExistence) {
         const oldPid = await collectIdAndOrPostEachBranch('');
         collectIdAndOrPostEachBranch('', true, true, oldPid, destination);
@@ -398,13 +338,15 @@ const Bpages = props => {
   };
 
   const getPinBpage = async id => {
-    const res = await axios.get(`${props.baseURL}/api/bpages/getPinBpage/${id}`);
+    const res = await axios.get(
+      `${props.baseURL}/api/bpages/getPinBpage/${id}`,
+    );
     return res.data[0].pin;
   };
 
   return (
     <div className="bpages">
-      <IndivinstMoneyButton />
+      <IndivinstMoneyButton message={value} />
       <Link
         className="pure-button backToParent"
         to={props.match.url.substring(
@@ -420,7 +362,10 @@ const Bpages = props => {
             ]
           : 'Homepage'}
       </Link>
-      <div className={`header ${(isPrivateBpage && Authenticated) && 'pure-button-primary'}`}>
+      <div
+        className={`header ${
+          isPrivateBpage && Authenticated && 'pure-button-primary'
+        }`}>
         <h1>{toTitleCase(props.match.params.id)}</h1>
         <br />
         {(!isPrivateBpage || Authenticated) && (
@@ -445,8 +390,12 @@ const Bpages = props => {
           {(!isPrivateBpage || Authenticated) && (
             <div dangerouslySetInnerHTML={{__html: unescape(value)}} />
           )}
-          <p>Date Modified: {(isPrivateBpage && Authenticated) ? dateModified : 0}</p>
-          <p>Date Created: {(isPrivateBpage && Authenticated) ? dateCreated : 0}</p>
+          <p>
+            Date Modified: {isPrivateBpage && Authenticated ? dateModified : 0}
+          </p>
+          <p>
+            Date Created: {isPrivateBpage && Authenticated ? dateCreated : 0}
+          </p>
         </div>
         {Authenticated && (
           <div className="rightSide">
@@ -506,7 +455,7 @@ const Bpages = props => {
                   onClick={handleDelete}>
                   Delete
                 </button>
-                <p className="verificationMessage"> {verificationMessage} </p>
+                <p className="verificationMessage">{verificationMessage} </p>
               </fieldset>
             </div>
           </div>

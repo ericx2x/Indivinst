@@ -34,9 +34,73 @@ export const checkIfBpageExists = async (destination, baseURL) => {
   return false;
 };
 
-//export const checkIfBpageHasChildren = async (id, baseURL) => {
-  //const response = await axios.get(
-    //`${baseURL}/api/bpages/haschildren/${id}`,
-  //);
-  //return false;
-//};
+
+export const collectIdAndOrPostEachBranch = async (
+    passedUpdateData,
+    postBool,
+    baseURL,
+    params,
+    //updateCurrBpageId,
+    //idNumber,
+    //moveDirectory,
+  ) => {
+    let paths = Object.values(params);
+    //if (moveDirectory) {
+      //paths = moveDirectory;
+    //}
+
+    let pid = 0;
+    let previousBpage;
+
+    for (let i = 0; i < paths.length; i++) {
+      if (i === 0) {
+        if (postBool) {
+          await axios.post(`${baseURL}/api/bpages/${paths[i]}`, {
+            messageData: passedUpdateData,
+            pid: 0,
+          });
+        }
+        previousBpage = await axios.get(
+          `${baseURL}/api/bpages/namepid/${paths[i]}/${pid}`,
+        );
+      } else {
+        pid = previousBpage.data[0].id;
+
+        if (postBool) {
+          await axios.post(`${baseURL}/api/bpages/${paths[i]}`, {
+            messageData: passedUpdateData,
+            pid: pid,
+          });
+        }
+
+        previousBpage = await axios.get(
+          `${baseURL}/api/bpages/namepid/${paths[i]}/${pid}`,
+        );
+      }
+    }
+
+    //if (updateCurrBpageId) {
+      //await axios.delete(
+        //`${baseURL}/api/bpages/${previousBpage.data[0].id}`,
+      //);
+      //await axios.post(
+        //`${baseURL}/api/bpages/updatePid/${paths[paths.length - 1]}/${
+          //paths.length > 1 ? pid : 0
+        //}/${idNumber}`,
+        //{messageData: value},
+      //);
+    //}
+
+    if (postBool) {
+      //This will only fire on a normal creation of a bpage and nothing to do with moving or renaming
+      await axios.post(
+        `${baseURL}/api/bpages/update/${params.id}/${
+          paths.length > 1 ? pid : 0
+        }`,
+        {messageData: passedUpdateData},
+      );
+    }
+
+    return previousBpage.data[0] ? previousBpage.data[0].id : 0;
+  };
+
