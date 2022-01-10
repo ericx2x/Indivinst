@@ -6,11 +6,13 @@ import IndivinstMoneyButton from './indivinstMoneyButton';
 import {
   collectIdAndOrPostEachBranch,
   moveBpage,
+  getBpageData,
 } from '../utils/bpagePipelineHelper';
 
 axios.defaults.withCredentials = true;
 
 const Bpages = props => {
+  const [txid, setTxId] = useState('');
   const [pinnedBpage, setPinnedBpage] = useState(false);
   const [isPrivateBpage, setIsPrivateBpage] = useState(0);
   const [privateText, setPrivateText] = useState('Private Mode is Off');
@@ -26,9 +28,10 @@ const Bpages = props => {
 
   const {Authenticated} = useContext(AuthenticatedContext);
 
-  useEffect(() => {
+  useEffect(async () => {
     setChildBpages([]); //This line resolves a bug where the childbpages dont render. Not sure why. Guess you have to do this and it's a weird oddity of React.
-    getBpageData();
+    const response = await getBpageData(props.baseURL, props.match.params);
+    afterBpageGet(response);
   }, []);
 
   useEffect(async () => {
@@ -53,6 +56,45 @@ const Bpages = props => {
     }, 1000);
     return () => clearTimeout(waitTwoSecondsBeforeSubmitting);
   }, [value]);
+
+  const afterBpageGet = response => {
+    if (!!response.data[0] && response.data[0].date_created) {
+      let strippedDateCreated = response.data[0].date_created
+        .replace(/T/g, ' ')
+        .replace(/Z/g, '');
+      strippedDateCreated = strippedDateCreated.substring(
+        0,
+        strippedDateCreated.indexOf('.'),
+      );
+      let strippedDateModified = response.data[0].date_modified
+        .replace(/T/g, ' ')
+        .replace(/Z/g, '');
+      strippedDateModified = strippedDateModified.substring(
+        0,
+        strippedDateModified.indexOf('.'),
+      );
+      getChildBpages(response.data[0]);
+      setDateModified(strippedDateModified);
+      setDateCreated(strippedDateCreated);
+      setValue(unescape(response.data[0].message));
+      setTxId(response.data[0].transaction_id);
+      setIsPrivateBpage(response.data[0].private);
+      setDataCurrentBpage(response);
+      const togglePrivateMode = () => {
+        if (response.data[0].private) {
+          setTimeout(() => {
+            setVerificationMessage('In Private Mode!');
+          }, 2000);
+          setValue(unescape(response.data[0].message));
+          setPrivateText('Private Mode Is On');
+        } else if (!response.data[0].private) {
+          setValue(unescape(response.data[0].message));
+          setPrivateText('Private Mode Is Off');
+        }
+      };
+      togglePrivateMode();
+    }
+  };
 
   const handleKeyPress = event => {
     if (event.key === 'Enter' && event.shiftKey) {
@@ -89,66 +131,6 @@ const Bpages = props => {
         addChild.push(e.name);
       });
       if (!!children.length) setChildBpages(addChild);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getBpageData = async () => {
-    try {
-      let response;
-      const paths = Object.values(props.match.params);
-      let pid;
-      for (let i = 0; i < paths.length; i++) {
-        if (i === 0) {
-          pid = 0;
-          response = await axios.get(
-            `${props.baseURL}/api/bpages/namepid/${paths[i]}/${pid}`,
-          );
-          !!response.data[0] && (pid = response.data[0].id);
-        } else {
-          response = await axios.get(
-            `${props.baseURL}/api/bpages/namepid/${paths[i]}/${pid}`,
-          );
-          !!response.data[0] && (pid = response.data[0].id);
-        }
-      }
-
-      if (!!response.data[0] && response.data[0].date_created) {
-        let strippedDateCreated = response.data[0].date_created
-          .replace(/T/g, ' ')
-          .replace(/Z/g, '');
-        strippedDateCreated = strippedDateCreated.substring(
-          0,
-          strippedDateCreated.indexOf('.'),
-        );
-        let strippedDateModified = response.data[0].date_modified
-          .replace(/T/g, ' ')
-          .replace(/Z/g, '');
-        strippedDateModified = strippedDateModified.substring(
-          0,
-          strippedDateModified.indexOf('.'),
-        );
-        getChildBpages(response.data[0]);
-        setDateModified(strippedDateModified);
-        setDateCreated(strippedDateCreated);
-        setValue(unescape(response.data[0].message));
-        setIsPrivateBpage(response.data[0].private);
-        setDataCurrentBpage(response);
-        const togglePrivateMode = () => {
-          if (response.data[0].private) {
-            setTimeout(() => {
-              setVerificationMessage('In Private Mode!');
-            }, 2000);
-            setValue(unescape(response.data[0].message));
-            setPrivateText('Private Mode Is On');
-          } else if (!response.data[0].private) {
-            setValue(unescape(response.data[0].message));
-            setPrivateText('Private Mode Is Off');
-          }
-        };
-        togglePrivateMode();
-      }
     } catch (error) {
       console.error(error);
     }
@@ -239,7 +221,7 @@ const Bpages = props => {
               '',
               props.match.params,
             );
-            console.log('x', currBpageId);
+            //console.log('x', currBpageId);
             await axios.delete(`${props.baseURL}/api/bpages/${currBpageId}`);
             setVerificationMessage('Bpage Deleted');
             setTimeout(() => {
@@ -332,6 +314,7 @@ const Bpages = props => {
         message={value}
         baseURL={props.baseURL}
         params={props.match.params}
+        txid={txid.transaction_id}
       />
       <Link
         className="pure-button backToParent"
@@ -376,12 +359,8 @@ const Bpages = props => {
           {(!isPrivateBpage || Authenticated) && (
             <div dangerouslySetInnerHTML={{__html: unescape(value)}} />
           )}
-          <p>
-            Date Modified: {isPrivateBpage && Authenticated ? dateModified : 0}
-          </p>
-          <p>
-            Date Created: {isPrivateBpage && Authenticated ? dateCreated : 0}
-          </p>
+          <p>Date Modified: {dateModified}</p>
+          <p>Date Created: {dateCreated}</p>
         </div>
         {Authenticated && (
           <div className="rightSide">
@@ -399,7 +378,8 @@ const Bpages = props => {
               {!!dateCreated && (
                 <button
                   className="pure-button pure-button-primary bar-button"
-                  onClick={() => { //Fix this because it is not working
+                  onClick={() => {
+                    //Fix this because it is not working
                     alert(
                       moveBpage(
                         props.baseURL,

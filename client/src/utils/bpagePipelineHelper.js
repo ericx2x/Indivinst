@@ -1,4 +1,5 @@
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 export const retrievePaths = async (name, namepid, baseURL) => {
   const paths = [];
@@ -36,11 +37,11 @@ export const checkIfBpageExists = async (destination, baseURL) => {
 
 //This function runs thru the branches or url path and creates a post request for each branch/page that was entered (thus also creating the page itself for each branch). This function should also return the ID of the specified branch
 export const collectIdAndOrPostEachBranch = async (
-  passedUpdateData,
+  passedUpdateData,//the value of the message
   postBool,
   baseURL,
   params,
-  txid,
+  txid,//txid of the bpage
   //updateCurrBpageId,
   //idNumber,
   //moveDirectory,
@@ -50,7 +51,6 @@ export const collectIdAndOrPostEachBranch = async (
   //paths = moveDirectory;
   //}
 
-  console.log('paths', paths);
   let pid = 0;
   let previousBpage;
 
@@ -99,11 +99,10 @@ export const collectIdAndOrPostEachBranch = async (
     //This will only fire on a normal creation of a bpage and nothing to do with moving or renaming
     await axios.post(
       `${baseURL}/api/bpages/update/${params.id}/${paths.length > 1 ? pid : 0}`,
-      {messageData: passedUpdateData},
+      {messageData: passedUpdateData, txid: txid},
     );
   }
 
-  console.log('previousBpage', previousBpage);
   return previousBpage.data[0] ? previousBpage.data[0].id : 0;
 };
 
@@ -126,5 +125,34 @@ export const moveBpage = async (baseURL, params) => {
     } else {
       return 'Sorry a bpage already exists in that destination! Please, try a different destination';
     }
+  }
+};
+
+//returns an object of needed data from a depth of bpages?
+export const getBpageData = async (baseURL, params) => {
+  let response;
+  try {
+    const paths = Object.values(params);
+    let pid;
+    for (let i = 0; i < paths.length; i++) {
+      if (i === 0) {
+        pid = 0;
+        response = await axios.get(
+          `${baseURL}/api/bpages/namepid/${paths[i]}/${pid}`,
+        );
+        !!response.data[0] && (pid = response.data[0].id);
+      } else {
+        response = await axios.get(
+          `${baseURL}/api/bpages/namepid/${paths[i]}/${pid}`,
+        );
+        !!response.data[0] && (pid = response.data[0].id);
+      }
+    }
+    return response;
+  } catch (error) {
+    console.error(error);
+    return response;
+  } finally {
+    return response;
   }
 };
