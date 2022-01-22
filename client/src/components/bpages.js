@@ -32,7 +32,26 @@ const Bpages = props => {
     setChildBpages([]); //This line resolves a bug where the childbpages dont render. Not sure why. Guess you have to do this and it's a weird oddity of React.
     const response = await getBpageData(props.baseURL, props.match.params);
     afterBpageGet(response);
+
+    if (response.data[0]) {
+      const apiData = await retrieveTxIdData(response.data[0].transaction_id);
+      apiData && setValue(apiData.vout[0].scriptPubKey.opReturn.parts[2]);
+      console.log('retrieveTxIdData', apiData);
+    }
   }, []);
+
+  const retrieveTxIdData = async txid => {
+    try {
+      const apiData = await fetch(
+        `https://api.whatsonchain.com/v1/bsv/main/tx/hash/${txid}`,
+      );
+      const actualData = await apiData.json();
+      return actualData;
+    } catch (e) {
+      console.error(e);
+      return console.error(e);
+    }
+  };
 
   useEffect(async () => {
     if (dataCurrentBpage.data) {

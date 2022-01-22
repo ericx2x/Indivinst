@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
 import {
   collectIdAndOrPostEachBranch,
   getBpageData,
@@ -11,8 +10,6 @@ const refreshToken = mbClient.getRefreshToken();
 //var Centrifuge = require('centrifuge');
 let bsv = require('bsv');
 let MoneyButton = require('@moneybutton/react-money-button').default;
-
-axios.defaults.withCredentials = true;
 
 //TODO actually make this component polished and usable.
 const IndivinstMoneyButton = ({message, baseURL, params, txid}) => {
@@ -57,22 +54,6 @@ const IndivinstMoneyButton = ({message, baseURL, params, txid}) => {
     setBalance(JSON.stringify(balance));
   };
 
-  const retrieveTxIdData = async (txid) => {
-    //const currentPageTxId = await axios.get(
-    //`${params.baseURL}/api/bpages/namepid/${paths[i]}/${pid}`,
-    //);
-    //console.log('currentPageTxId', currentPageTxId);
-      console.log('lsakjd', txid);
-    const email = 'ericjlima@gmail.com';
-    const password = 'water123';
-    if (txid) {
-      const op_returnData = await axios.get(
-        `https://api.whatsonchain.com/v1/bsv/main/tx/hash/${txid}`, { email, password }, { withCredentials: false }
-      );
-      console.log('op_returnData', op_returnData);
-    }
-  };
-
   const hextoascii = str1 => {
     var hex = str1.toString();
     var str = '';
@@ -84,10 +65,21 @@ const IndivinstMoneyButton = ({message, baseURL, params, txid}) => {
 
   useEffect(async () => {
     const response = await getBpageData(baseURL, params);
-    console.log('theResponse', response);
-      //console.log('theresponseidakjd', response.datatxid);
-    retrieveTxIdData(response.data[0].transaction_id);
+    //retrieveTxIdData(response.data[0].transaction_id);
   }, []);
+
+  //const retrieveTxIdData = async txid => {
+    //try {
+      //const apiData = await fetch(
+        //`https://api.whatsonchain.com/v1/bsv/main/tx/hash/${txid}`,
+      //);
+      //const actualData = await apiData.json();
+      //return actualData;
+    //} catch (e) {
+      //console.error(e);
+      //return console.error(e);
+    //}
+  //};
 
   useEffect(() => {
     retrieveMbData();

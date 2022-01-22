@@ -1,4 +1,6 @@
 var express = require('express');
+const needle = require('needle');
+const fetch = require('whatwg-fetch');
 var router = express.Router();
 //var cors = require('cors');
 var app = express();
@@ -20,6 +22,8 @@ con.connect(function (err) {
 });
 
 //START OF AUTOSETUP
+//
+//TODO: perhaps the below transaction id can be smaller than a varchar 255 because apparently transaction IDs are only 90kb?
 
 //var sql = "CREATE TABLE bpages (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), transaction_id VARCHAR(255) DEFAULT 0, message longtext, date_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, date_modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, private BOOLEAN DEFAULT FALSE, pid INT, namepid VARCHAR(255) UNIQUE NOT NULL, pin BOOLEAN DEFAULT FALSE)";
 //con.query(sql, function (err, result) {
@@ -81,6 +85,59 @@ router.get('/', function (req, res, next) {
   );
 });
 
+//router.get('/bsv/:txid', function (req, res, next) {
+////if (err) throw err;
+//const remoteurl = `http://api.whatsonchain.com/v1/bsv/main/tx/hash/${req.params.txid}`;
+////console.log('hit');
+////console.log('txid', req.params.txid);
+//console.log('remoteurl', remoteurl);
+////fetch(remoteurl, {}).then(res => res.send(res.json()));
+//fetch(remoteurl).then(res => res.json()).then(x => res.send(x));
+
+//});
+//==========================
+//router.get('/bsv/:txid', async function (req, res) {
+  //const remoteurl = `http://api.whatsonchain.com/v1/bsv/main/tx/hash/${req.params.txid}`;
+  //res.send(await fetch(remoteurl, {}).then(res => res.json()));
+//});
+//==========================
+router.get('/bsv/:txid', async (req, res) => {
+  const remoteUrl = `http://api.whatsonchain.com/v1/bsv/main/tx/hash/${req.params.txid}`;
+  const stream = needle.get(remoteUrl);
+
+  stream.pipe(res);
+});
+//=========================
+//router.get('/bsv/:txid', async (req, res) => {
+  //needle('get', `http://api.whatsonchain.com/v1/bsv/main/tx/hash/${req.params.txid}`)
+  //.then(function(resp) {
+    //// ...
+    //console.log('resp', resp);
+  //})
+  //.catch(function(err) {
+    //// ...
+  //});
+//});
+  //
+const api = 'https://api.isevenapi.xyz/api/iseven/'
+app.get('bsv/:txid', async (req, res) => {
+  const result = await needle('get', api.concat(req.params.endpoint))
+  console.log('result', result);
+  res.json(result.body.iseven)
+})
+app.listen(3000, () => console.info(`server listening at http://localhost:3000`))
+
+//router.get('/bsv/:txid', function (req, res, next) {
+  //con.query(
+    //'SELECT name FROM bpages where pid = 0 OR pid IS NULL ORDER BY name',
+    //function (err, result, fields) {
+      //if (err) throw err;
+      //// console.log(result);
+      //res.json(result);
+    //},
+  //);
+//});
+
 router.get('/publicBpages', function (req, res, next) {
   con.query(
     'SELECT name FROM bpages where (pid = 0 OR pid IS NULL) AND private = 0 ORDER BY name',
@@ -107,7 +164,7 @@ router.get('/getPinBpage/:currentBpageId', function (req, res, next) {
     `SELECT pin FROM bpages where id = '${req.params.currentBpageId}'`,
     function (err, result, fields) {
       if (err) throw err;
-      console.log('res', result);
+      //console.log('res', result);
       res.send(result);
     },
   );
@@ -129,7 +186,7 @@ router.get('/:bpagesId', function (req, res, next) {
 
 router.get('/namepid/:bpagesName/:pid', function (req, res, next) {
   con.query(
-    `SELECT id, name, message, date_created, date_modified, private, pid, namepid FROM bpages 
+    `SELECT id, name, message, transaction_id, date_created, date_modified, private, pid, namepid FROM bpages 
             WHERE namepid='${req.params.bpagesName} ${req.params.pid}';`,
     function (err, result, fields) {
       //console.log('req.params.bpagesName', req.params.bpagesName);
@@ -172,11 +229,14 @@ router.get('/children/:bpagesId', function (req, res, next) {
 
 router.post('/:bpagesId', function (req, res, next) {
   con.query(
-    `INSERT IGNORE INTO bpages (name, message, pid, namepid) VALUES ('${req.params.bpagesId.toLowerCase()}', '${
+    `INSERT IGNORE INTO bpages (name, message, transaction_id, pid, namepid) VALUES ('${req.params.bpagesId.toLowerCase()}', '${
       req.body.messageData
-    }', '${req.body.pid}', '${req.params.bpagesId} ${req.body.pid}')`,
+    }', '${req.body.txid}', '${req.body.pid}', '${req.params.bpagesId} ${
+      req.body.pid
+    }')`,
     function (err, result, fields) {
       if (err) throw err;
+      console.log('txid', req.body.txid);
       res.send(result);
       // console.log(result);
       // let sql = `INSERT IGNORE INTO bpages (name, message) VALUES ('${req.params.bpagesId}', '')`;
@@ -187,9 +247,9 @@ router.post('/:bpagesId', function (req, res, next) {
 
 router.post('/update/:bpagesId/:pid', function (req, res, next) {
   con.query(
-    `UPDATE bpages SET message='${req.body.messageData}' WHERE namepid='${req.params.bpagesId} ${req.params.pid}';`,
+    `UPDATE bpages SET message='${req.body.messageData}', transaction_id='${req.body.txid}' WHERE namepid='${req.params.bpagesId} ${req.params.pid}';`,
     function (err, result, fields) {
-      //console.log('msgdata', req.body.messageData);
+      //console.log('msgdata', req.body.txid);
       //console.log('namepid', req.params.bpagesId + ' ' + req.params.pid);
       if (err) throw err;
       res.send(result);

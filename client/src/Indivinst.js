@@ -12,7 +12,7 @@ import Bpages from './components/bpages';
 import MoneyButtonLogin from './components/moneyButtonLogin';
 //import Login from './components/login';
 import AllBpages from './components/allBpages';
-import QuickLogin from './components/quickLogin';
+import MoneyButtonQuickLogin from './components/moneyButtonQuickLogin';
 import MetaHead from './components/MetaHead';
 import axios from 'axios';
 import './Indivinst.css';
@@ -20,6 +20,9 @@ import './Indivinst.css';
 axios.defaults.withCredentials = true;
 
 export const AuthenticatedContext = React.createContext();
+export const IdContext = React.createContext();
+export const UserProfileContext = React.createContext();
+export const BalanceContext = React.createContext();
 
 const App = () => {
   const [activeMenu, setActiveMenu] = useState('');
@@ -113,7 +116,7 @@ const App = () => {
                       Indivinst
                     </NavLink>
                     <ul className="pure-menu-list">
-                      <QuickLogin
+                      <MoneyButtonQuickLogin
                         baseURL={baseURL}
                         setAuthenticated={setAuthenticated}
                       />
