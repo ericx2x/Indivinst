@@ -35,6 +35,8 @@ export const checkIfBpageExists = async (destination, baseURL) => {
   return false;
 };
 
+
+//TODO: make sure to add in the users paymail address as the first path
 //This function runs thru the branches or url path and creates a post request for each branch/page that was entered (thus also creating the page itself for each branch). This function should also return the ID of the specified branch
 export const collectIdAndOrPostEachBranch = async (
   passedUpdateData,//the value of the message

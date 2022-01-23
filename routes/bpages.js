@@ -85,58 +85,6 @@ router.get('/', function (req, res, next) {
   );
 });
 
-//router.get('/bsv/:txid', function (req, res, next) {
-////if (err) throw err;
-//const remoteurl = `http://api.whatsonchain.com/v1/bsv/main/tx/hash/${req.params.txid}`;
-////console.log('hit');
-////console.log('txid', req.params.txid);
-//console.log('remoteurl', remoteurl);
-////fetch(remoteurl, {}).then(res => res.send(res.json()));
-//fetch(remoteurl).then(res => res.json()).then(x => res.send(x));
-
-//});
-//==========================
-//router.get('/bsv/:txid', async function (req, res) {
-  //const remoteurl = `http://api.whatsonchain.com/v1/bsv/main/tx/hash/${req.params.txid}`;
-  //res.send(await fetch(remoteurl, {}).then(res => res.json()));
-//});
-//==========================
-router.get('/bsv/:txid', async (req, res) => {
-  const remoteUrl = `http://api.whatsonchain.com/v1/bsv/main/tx/hash/${req.params.txid}`;
-  const stream = needle.get(remoteUrl);
-
-  stream.pipe(res);
-});
-//=========================
-//router.get('/bsv/:txid', async (req, res) => {
-  //needle('get', `http://api.whatsonchain.com/v1/bsv/main/tx/hash/${req.params.txid}`)
-  //.then(function(resp) {
-    //// ...
-    //console.log('resp', resp);
-  //})
-  //.catch(function(err) {
-    //// ...
-  //});
-//});
-  //
-const api = 'https://api.isevenapi.xyz/api/iseven/'
-app.get('bsv/:txid', async (req, res) => {
-  const result = await needle('get', api.concat(req.params.endpoint))
-  console.log('result', result);
-  res.json(result.body.iseven)
-})
-app.listen(3000, () => console.info(`server listening at http://localhost:3000`))
-
-//router.get('/bsv/:txid', function (req, res, next) {
-  //con.query(
-    //'SELECT name FROM bpages where pid = 0 OR pid IS NULL ORDER BY name',
-    //function (err, result, fields) {
-      //if (err) throw err;
-      //// console.log(result);
-      //res.json(result);
-    //},
-  //);
-//});
 
 router.get('/publicBpages', function (req, res, next) {
   con.query(
@@ -236,7 +184,7 @@ router.post('/:bpagesId', function (req, res, next) {
     }')`,
     function (err, result, fields) {
       if (err) throw err;
-      console.log('txid', req.body.txid);
+      //console.log('txid', req.body.txid);
       res.send(result);
       // console.log(result);
       // let sql = `INSERT IGNORE INTO bpages (name, message) VALUES ('${req.params.bpagesId}', '')`;

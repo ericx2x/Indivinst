@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef, useContext} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
 import {AuthenticatedContext} from '../Indivinst';
-import IndivinstMoneyButton from './indivinstMoneyButton';
+//import IndivinstMoneyButton from './indivinstMoneyButton';
 import {
   collectIdAndOrPostEachBranch,
   moveBpage,
@@ -329,12 +329,12 @@ const Bpages = props => {
 
   return (
     <div className="bpages">
-      <IndivinstMoneyButton
+      {/*<IndivinstMoneyButton
         message={value}
         baseURL={props.baseURL}
         params={props.match.params}
         txid={txid.transaction_id}
-      />
+      />*/}
       <Link
         className="pure-button backToParent"
         to={props.match.url.substring(

@@ -14,9 +14,12 @@ var sha256 = require('sha256');
 axios.defaults.withCredentials = true;
 
 const QuickLogin = props => {
-  const [id, setId] = useState('');
-  //TODO: Get this line to work. You need to have access to the writing textarea. const {id, setId} = useContext(IdContext);
-  //const [userProfile, setUserProfile] = useState('');
+  //TODO: create a previous location context to link a user back to their page after getting redirected by the oauth page
+
+  //const [id, setId] = useState('');
+  const {Id, setId} = useContext(IdContext);
+  //TODO: Get user profile/balance to be usecontext alongside id? or remove them?
+  ////const [userProfile, setUserProfile] = useState('');
   //const {userProfile, setUserProfile} = useContext(UserProfileContext);
   //const [balance, setBalance] = useState(0);
   //const {balance, setBalance} = useContext(BalanceContext);
@@ -43,12 +46,27 @@ const QuickLogin = props => {
     //'mbClient.handleAuthorizationResponse()',
     //await mbClient.handleAuthorizationResponse(),
     //);
-    if (mbClient.handleAuthorizationResponse()) {
-      setAuthenticated(true);
+    if (
+      window.location.pathname.includes('oauth-response-web') &&
+      mbClient.handleAuthorizationResponse()
+    ) {
+      const {id: userId} = await mbClient.getIdentity();
+      //const profile = await mbClient.getUserProfile(userId);
+      //const balance = await mbClient.getBalance(userId);
+      setId(userId);
+      //setUserProfile(JSON.stringify(profile));
+      //setBalance(JSON.stringify(balance));
     }
   }, []);
 
-    const retrieveMbData = async () => {
+  useEffect(()=>{
+      console.log('auth', Authenticated);
+      console.log('id', Id);
+      setAuthenticated(true);
+
+  }, [Id]);
+
+  const retrieveMbData = async () => {
     window.location.pathname.includes('oauth-response-web') &&
       mbClient.handleAuthorizationResponse();
 
@@ -64,7 +82,6 @@ const QuickLogin = props => {
     //console.log('idi', mbClient.getIdentity())
     //});
   };
-
 
   const handleMBRequestAuthorization = () => {
     mbClient.requestAuthorization(

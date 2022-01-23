@@ -45,189 +45,189 @@ const MoneyButtonLogin = () => {
   };
 
   //const bitBusCode = () => {
-    //const query = {
-      //q: {
-        //find: {
-          //'out.s2': '19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut',
-          //'blk.i': {$gt: 609000},
-          //// "$text": {$search: "tetrissvscorex3x"}
-          //// used to be the above in find
-        //},
-        //sort: {'blk.i': 1},
-        //project: {blk: 1, 'tx.h': 1, 'out.s4': 1, 'out.o1': 1},
-      //},
-    //};
-    //fetch('https://txo.bitbus.network/block', {
-      //method: 'post',
-      //headers: {'Content-type': 'application/json; charset=utf-8'},
-      //body: JSON.stringify(query),
-    //}).then(res => {
-      //console.log('res', res);
-      //console.log('process.stdout', process.stdout);
-      ////res.body.pipe(process.stdout);
-    //});
+  //const query = {
+  //q: {
+  //find: {
+  //'out.s2': '19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut',
+  //'blk.i': {$gt: 609000},
+  //// "$text": {$search: "tetrissvscorex3x"}
+  //// used to be the above in find
+  //},
+  //sort: {'blk.i': 1},
+  //project: {blk: 1, 'tx.h': 1, 'out.s4': 1, 'out.o1': 1},
+  //},
+  //};
+  //fetch('https://txo.bitbus.network/block', {
+  //method: 'post',
+  //headers: {'Content-type': 'application/json; charset=utf-8'},
+  //body: JSON.stringify(query),
+  //}).then(res => {
+  //console.log('res', res);
+  //console.log('process.stdout', process.stdout);
+  ////res.body.pipe(process.stdout);
+  //});
   //};
 
   //const centrifugeCodeScaleTransactions = () => {
-    //let txObj = [];
-    //const getBlock = async (height, hash) => {
-      //let res,
-        //tx = [];
-      //if (height) {
-        //res = await (
-          //await fetch(
-            //`https://api.whatsonchain.com/v1/bsv/main/block/height/${height}`,
-          //)
-        //).json();
-      //} else if (hash) {
-        //res = await (
-          //await fetch(
-            //`https://api.whatsonchain.com/v1/bsv/main/block/hash/${hash}`,
-          //)
-        //).json();
-      //}
-      //res.tx.forEach(t => {
-        //tx.push(t);
-      //});
+  //let txObj = [];
+  //const getBlock = async (height, hash) => {
+  //let res,
+  //tx = [];
+  //if (height) {
+  //res = await (
+  //await fetch(
+  //`https://api.whatsonchain.com/v1/bsv/main/block/height/${height}`,
+  //)
+  //).json();
+  //} else if (hash) {
+  //res = await (
+  //await fetch(
+  //`https://api.whatsonchain.com/v1/bsv/main/block/hash/${hash}`,
+  //)
+  //).json();
+  //}
+  //res.tx.forEach(t => {
+  //tx.push(t);
+  //});
 
-      //if (res.pages && res.pages.uri.length) {
-        //const pages = res.pages.uri;
-        //for (let p of pages) {
-          //const res = await (
-            //await fetch(`https://api.whatsonchain.com/v1/bsv/main${p}`)
-          //).json();
+  //if (res.pages && res.pages.uri.length) {
+  //const pages = res.pages.uri;
+  //for (let p of pages) {
+  //const res = await (
+  //await fetch(`https://api.whatsonchain.com/v1/bsv/main${p}`)
+  //).json();
 
-          //res.forEach(t => {
-            //tx.push(t);
-          //});
-        //}
-      //}
-      //console.log('tx', {tx});
+  //res.forEach(t => {
+  //tx.push(t);
+  //});
+  //}
+  //}
+  //console.log('tx', {tx});
 
-      //const looptimes = parseInt(tx.length / 20);
-      //const remainder = tx.length % 20;
-      //console.log('xlr', {looptimes}, {remainder});
+  //const looptimes = parseInt(tx.length / 20);
+  //const remainder = tx.length % 20;
+  //console.log('xlr', {looptimes}, {remainder});
 
-      //let x = 0;
-      //let temp = [];
-      //for (let i = 0; i < looptimes; i++) {
-        //for (let j = 0; j < 20; j++) {
-          //temp.push(tx[x]);
-          //x++;
-        //}
-        //const res = await (
-          //await fetch(`https://api.whatsonchain.com/v1/bsv/main/txs/hex`, {
-            //method: 'post',
-            //body: JSON.stringify({txids: temp}),
-          //})
-        //).json();
-        //console.log('dsRes', {res});
-        //temp = [];
+  //let x = 0;
+  //let temp = [];
+  //for (let i = 0; i < looptimes; i++) {
+  //for (let j = 0; j < 20; j++) {
+  //temp.push(tx[x]);
+  //x++;
+  //}
+  //const res = await (
+  //await fetch(`https://api.whatsonchain.com/v1/bsv/main/txs/hex`, {
+  //method: 'post',
+  //body: JSON.stringify({txids: temp}),
+  //})
+  //).json();
+  //console.log('dsRes', {res});
+  //temp = [];
 
-        //res.forEach(t => {
-          //if (t.hex.includes('73656e7369626c65')) {
-            //txObj.push({
-              //txid: t.txid,
-              //hex: t.hex,
-            //});
-          //}
-        //});
-        //console.log({txObj});
-      //}
-      //temp = [];
+  //res.forEach(t => {
+  //if (t.hex.includes('73656e7369626c65')) {
+  //txObj.push({
+  //txid: t.txid,
+  //hex: t.hex,
+  //});
+  //}
+  //});
+  //console.log({txObj});
+  //}
+  //temp = [];
 
-      //for (let k = tx.length - 1; k > tx.length - remainder; k--) {
-        //temp.push(tx[k]);
-      //}
-      ////console.log('last', {temp});
+  //for (let k = tx.length - 1; k > tx.length - remainder; k--) {
+  //temp.push(tx[k]);
+  //}
+  ////console.log('last', {temp});
 
-      ////reimplemented
-      //const remainderRes = await (
-        //await fetch(`https://api.whatsonchain.com/v1/bsv/main/txs/hex`, {
-          //method: 'post',
-          //body: JSON.stringify({txids: temp}),
-        //})
-      //).json();
-      //console.log('dsRemainderRes', {res});
-      //temp = [];
+  ////reimplemented
+  //const remainderRes = await (
+  //await fetch(`https://api.whatsonchain.com/v1/bsv/main/txs/hex`, {
+  //method: 'post',
+  //body: JSON.stringify({txids: temp}),
+  //})
+  //).json();
+  //console.log('dsRemainderRes', {res});
+  //temp = [];
 
-      //remainderRes.forEach(t => {
-        //if (t.hex.includes('73656e7369626c65')) {
-          //txObj.push({
-            //txid: t.txid,
-            //hex: t.hex,
-          //});
-        //}
-      //});
-      //console.log({txObj});
+  //remainderRes.forEach(t => {
+  //if (t.hex.includes('73656e7369626c65')) {
+  //txObj.push({
+  //txid: t.txid,
+  //hex: t.hex,
+  //});
+  //}
+  //});
+  //console.log({txObj});
 
-      //if (res.nextblockhash) {
-        //await getBlock(null, res.nextblockhash);
-      //}
-    //};
+  //if (res.nextblockhash) {
+  //await getBlock(null, res.nextblockhash);
+  //}
+  //};
 
-    //getBlock(707402);
+  //getBlock(707402);
   //};
 
   //const centrifugeCode = () => {
-    ////https://docs.moneybutton.com/docs/bsv/bsv-private-key.html
-    ////then keep watching j.henslee's videos on how to read opreturn data from a bsv address
-    ////You left off at 3.30 mins in:
-    ////https://www.youtube.com/watch?v=L2d0Bnapy3k
-    ////const address = '1HJVXv6ftqksZf7yV63vvTh9dAvVgQKeD4'; //this might not be necessary to find transactions. May not need this unless you can find this autiomatically via moneybutton?
-    ////
-    ////
-    ////01000000017f9fedabc5a811d611cfe4166842799bcefb5561080f6c2df69fb9f70610716e010000006b483045022100bdcd0db3f14ebe327ff29c9fb2547cc9c37b13e50af438a2cb76a47f0daec13302207914b31b0e40444630dc5010f45dd07b4f6f8c84cb087a80965fd4d71d756e54412102b7c6ec9b7a6a4f50311caa0d699baffeb23b9474ecc75553079e1e27f2474b52ffffffff02670c0000000000001976a914a9c0392824d6f721c5e670f3c4921577c947a68a88acb60f0000000000001976a914bee49e36b5296942e78fccfc77e7f2fe5031afc588ac00000000
-    ////
-    ////
-    ////
+  ////https://docs.moneybutton.com/docs/bsv/bsv-private-key.html
+  ////then keep watching j.henslee's videos on how to read opreturn data from a bsv address
+  ////You left off at 3.30 mins in:
+  ////https://www.youtube.com/watch?v=L2d0Bnapy3k
+  ////const address = '1HJVXv6ftqksZf7yV63vvTh9dAvVgQKeD4'; //this might not be necessary to find transactions. May not need this unless you can find this autiomatically via moneybutton?
+  ////
+  ////
+  ////01000000017f9fedabc5a811d611cfe4166842799bcefb5561080f6c2df69fb9f70610716e010000006b483045022100bdcd0db3f14ebe327ff29c9fb2547cc9c37b13e50af438a2cb76a47f0daec13302207914b31b0e40444630dc5010f45dd07b4f6f8c84cb087a80965fd4d71d756e54412102b7c6ec9b7a6a4f50311caa0d699baffeb23b9474ecc75553079e1e27f2474b52ffffffff02670c0000000000001976a914a9c0392824d6f721c5e670f3c4921577c947a68a88acb60f0000000000001976a914bee49e36b5296942e78fccfc77e7f2fe5031afc588ac00000000
+  ////
+  ////
+  ////
 
-    //const address = '1GUZUKvLseDYzByZbwnpX6GHBqcUjn1zBL';
-    //const filter = bsv.Address.fromString(address).toJSON().height;
-    ////https://api.whatsonchain.com/v1/bsv/<network>/block/height/<height>
-    ////console.log('filter', filter);
-    //const centrifuge = new Centrifuge('wss://socket.whatsonchain.com/mempool'); //try blcokheaders later
-    //centrifuge.on('publish', function (message) {
-      ////console.log('Data: ' + JSON.stringify(message.data, null, 2));
-      //const hex = message.data.hex;
-      //if (hex.includes(filter)) {
-        //console.log('hex');
-        //console.log(hex);
-        //const bsvtx = bsv.Transaction(hex);
-        //console.log('bsvtx: ', bsvtx);
-        //const satoshis = bsvtx.outputs.find(
-          //out => out.script.chunks[2].buf.toString('hex') === filter,
-        //).satoshis; //here you can change this to more data retrievals like custom scripts but check their docs.
-        //const scriptData = bsvtx.outputs
-          //.find(out => out.script.chunks[2].buf.toString('hex') === filter)
-          //.script.chunks[3].toString(); //here you can change this to more data retrievals like custom scripts but check their docs.
-        //console.log(`I was paid ${satoshis} satoshis.`);
-        //console.log(`scriptData: ${scriptData} satoshis.`);
-        //console.log(scriptData);
-      //}
-    //});
-    //centrifuge.on('disconnect', function (ctx) {
-      //console.log(
-        //'Disconnected: ' +
-          //ctx.reason +
-          //(ctx.reconnect
-            //? ', will try to reconnect'
-            //: ", won't try to reconnect"),
-      //);
-    //});
-    //centrifuge.on('connect', function (ctx) {
-      //console.log(
-        //'Connected with client ID ' + ctx.client + ' over ' + ctx.transport,
-      //);
-    //});
-    //centrifuge.connect();
-    ////var centrifuge = new Centrifuge(
-    ////'ws://centrifuge.example.com/connection/websocket',
-    ////);
-    ////centrifuge.subscribe('news', function (message) {
-    ////console.log(message);
-    ////});
-    ////centrifuge.connect();
+  //const address = '1GUZUKvLseDYzByZbwnpX6GHBqcUjn1zBL';
+  //const filter = bsv.Address.fromString(address).toJSON().height;
+  ////https://api.whatsonchain.com/v1/bsv/<network>/block/height/<height>
+  ////console.log('filter', filter);
+  //const centrifuge = new Centrifuge('wss://socket.whatsonchain.com/mempool'); //try blcokheaders later
+  //centrifuge.on('publish', function (message) {
+  ////console.log('Data: ' + JSON.stringify(message.data, null, 2));
+  //const hex = message.data.hex;
+  //if (hex.includes(filter)) {
+  //console.log('hex');
+  //console.log(hex);
+  //const bsvtx = bsv.Transaction(hex);
+  //console.log('bsvtx: ', bsvtx);
+  //const satoshis = bsvtx.outputs.find(
+  //out => out.script.chunks[2].buf.toString('hex') === filter,
+  //).satoshis; //here you can change this to more data retrievals like custom scripts but check their docs.
+  //const scriptData = bsvtx.outputs
+  //.find(out => out.script.chunks[2].buf.toString('hex') === filter)
+  //.script.chunks[3].toString(); //here you can change this to more data retrievals like custom scripts but check their docs.
+  //console.log(`I was paid ${satoshis} satoshis.`);
+  //console.log(`scriptData: ${scriptData} satoshis.`);
+  //console.log(scriptData);
+  //}
+  //});
+  //centrifuge.on('disconnect', function (ctx) {
+  //console.log(
+  //'Disconnected: ' +
+  //ctx.reason +
+  //(ctx.reconnect
+  //? ', will try to reconnect'
+  //: ", won't try to reconnect"),
+  //);
+  //});
+  //centrifuge.on('connect', function (ctx) {
+  //console.log(
+  //'Connected with client ID ' + ctx.client + ' over ' + ctx.transport,
+  //);
+  //});
+  //centrifuge.connect();
+  ////var centrifuge = new Centrifuge(
+  ////'ws://centrifuge.example.com/connection/websocket',
+  ////);
+  ////centrifuge.subscribe('news', function (message) {
+  ////console.log(message);
+  ////});
+  ////centrifuge.connect();
   //};
 
   //TODO: maybe a third centrifugecode functoin that will retrieve the transaction id given by the myOnPaymentCallback function
@@ -256,7 +256,7 @@ const MoneyButtonLogin = () => {
   }, []);
 
   //const myCustomCallback = payment => {
-    //console.log('A payment has occurred!', payment);
+  //console.log('A payment has occurred!', payment);
   //};
 
   function myOnPaymentCallback(payment) {
