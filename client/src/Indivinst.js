@@ -31,6 +31,10 @@ const App = () => {
   const AuthenticatedContextValue = {Authenticated, setAuthenticated};
   const [Id, setId] = useState('');
   const IdContextValue = {Id, setId};
+  const [UserProfile, setUserProfile] = useState('');
+  const UserProfileContextValue = {UserProfile, setUserProfile};
+  const [Balance, setBalance] = useState('');
+  const BalanceContextValue = {Balance, setBalance};
 
   const baseURL =
     typeof window !== 'undefined' && !window.location.href.includes('localhost')
@@ -97,115 +101,130 @@ const App = () => {
   return (
     <AuthenticatedContext.Provider value={AuthenticatedContextValue}>
       <IdContext.Provider value={IdContextValue}>
-        <MetaHead />
-        <div id="layout" className={`${activeMenu}`}>
-          <div id="main">
-            <div className="content">
-              <Router>
-                <div>
-                  <a
-                    href="#menu"
-                    id="menuLink"
-                    onClick={() => handleClick()}
-                    className={`menu-link`}>
-                    <span></span>
-                  </a>
-                  <div id="menu">
-                    <div className="pure-menu">
-                      <NavLink
-                        activeClassName="pure-menu-selected"
-                        className="pure-menu-heading"
-                        to="/">
-                        Indivinst
-                      </NavLink>
-                      <ul className="pure-menu-list">
-                        <MoneyButtonQuickLogin
-                          baseURL={baseURL}
-                          setAuthenticated={setAuthenticated}
-                          setId={setId}
-                        />
-                        <li className="pure-menu-item" key="1">
-                          <a className="pure-menu-link" href={`/allBpages`}>
-                            All Bpages
-                          </a>
-                        </li>
-                        <li className="pure-menu-item" key="2">
-                          <a
-                            className="pure-menu-link"
-                            href={`/moneyButtonLogin`}>
-                            MoneyButtonLogin
-                          </a>
-                        </li>
-                        {pinBpages.map((bpage, index) => {
-                          return (
-                            <li className="pure-menu-item" key={index}>
-                              <a
-                                className="pure-menu-link"
-                                href={`/${bpage.url}`}>
-                                {toTitleCase(bpage.name)}
+        <UserProfileContext.Provider value={UserProfileContextValue}>
+          <BalanceContext.Provider value={BalanceContextValue}>
+            <MetaHead />
+            <div id="layout" className={`${activeMenu}`}>
+              <div id="main">
+                <div className="content">
+                  <Router>
+                    <div>
+                      <a
+                        href="#menu"
+                        id="menuLink"
+                        onClick={() => handleClick()}
+                        className={`menu-link`}>
+                        <span></span>
+                      </a>
+                      <div id="menu">
+                        <div className="pure-menu">
+                          <NavLink
+                            activeClassName="pure-menu-selected"
+                            className="pure-menu-heading"
+                            to="/">
+                            Indivinst
+                          </NavLink>
+                          <ul className="pure-menu-list">
+                            <MoneyButtonQuickLogin
+                              baseURL={baseURL}
+                              setAuthenticated={setAuthenticated}
+                              setId={setId}
+                              setUserProfile={setUserProfile}
+                              setBalance={setBalance}
+                            />
+                            <li className="pure-menu-item" key="1">
+                              <a className="pure-menu-link" href={`/allBpages`}>
+                                All Bpages
                               </a>
                             </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  </div>
-                  <Switch>
-                    <Route
-                      path={'/MoneyButtonLogin'}
-                      render={routeProps => (
-                        <MoneyButtonLogin {...routeProps} baseURL={baseURL} />
-                      )}
-                    />
-                    <Route
-                      path={'/oauth-response-web'}
-                      render={routeProps => (
-                        <MoneyButtonLogin {...routeProps} baseURL={baseURL} />
-                      )}
-                    />
-                    <Route
-                      path={'/oauth/v1/authorize'}
-                      render={routeProps => (
-                        <MoneyButtonLogin {...routeProps} baseURL={baseURL} />
-                      )}
-                    />
-                    <Route
-                      path={'/allbpages'}
-                      render={routeProps => (
-                        <AllBpages
-                          {...routeProps}
-                          baseURL={baseURL}
-                          toTitleCase={toTitleCase()}
-                        />
-                      )}
-                    />
-                    {generateChildBpageRoutes()}
-                    <Route
-                      path={'/:id'}
-                      render={routeProps => (
-                        <Bpages
-                          {...routeProps}
-                          baseURL={baseURL}
-                          getPinBpages={getPinBpages}
-                          setPinBpages={setPinBpages}
-                        />
-                      )}
-                    />
-                    <Route
-                      path={'/'}
-                      render={() => (
-                        <div className="vertical-center">
-                          <h3>This is Eric Lima's bpages website.</h3>
+                            <li className="pure-menu-item" key="2">
+                              <a
+                                className="pure-menu-link"
+                                href={`/moneyButtonLogin`}>
+                                MoneyButtonLogin
+                              </a>
+                            </li>
+                            {pinBpages.map((bpage, index) => {
+                              return (
+                                <li className="pure-menu-item" key={index}>
+                                  <a
+                                    className="pure-menu-link"
+                                    href={`/${bpage.url}`}>
+                                    {toTitleCase(bpage.name)}
+                                  </a>
+                                </li>
+                              );
+                            })}
+                          </ul>
                         </div>
-                      )}
-                    />
-                    <Redirect from="*" to="/" />
-                  </Switch>
+                      </div>
+                      <Switch>
+                        <Route
+                          path={'/MoneyButtonLogin'}
+                          render={routeProps => (
+                            <MoneyButtonLogin
+                              {...routeProps}
+                              baseURL={baseURL}
+                            />
+                          )}
+                        />
+                        <Route
+                          path={'/oauth-response-web'}
+                          render={routeProps => (
+                            <MoneyButtonLogin
+                              {...routeProps}
+                              baseURL={baseURL}
+                            />
+                          )}
+                        />
+                        <Route
+                          path={'/oauth/v1/authorize'}
+                          render={routeProps => (
+                            <MoneyButtonLogin
+                              {...routeProps}
+                              baseURL={baseURL}
+                            />
+                          )}
+                        />
+                        <Route
+                          path={'/allbpages'}
+                          render={routeProps => (
+                            <AllBpages
+                              {...routeProps}
+                              baseURL={baseURL}
+                              toTitleCase={toTitleCase()}
+                            />
+                          )}
+                        />
+                        {generateChildBpageRoutes()}
+                        <Route
+                          path={'/:id'}
+                          render={routeProps => (
+                            <Bpages
+                              {...routeProps}
+                              baseURL={baseURL}
+                              getPinBpages={getPinBpages}
+                              setPinBpages={setPinBpages}
+                            />
+                          )}
+                        />
+                        <Route
+                          path={'/'}
+                          render={() => (
+                            <div className="vertical-center">
+                              <h3>This is Eric Lima's bpages website.</h3>
+                            </div>
+                          )}
+                        />
+                        <Redirect from="*" to="/" />
+                      </Switch>
+                    </div>
+                  </Router>
                 </div>
-              </Router>
+              </div>
             </div>
-          </div>
-        </div>
+          </BalanceContext.Provider>
+        </UserProfileContext.Provider>
       </IdContext.Provider>
     </AuthenticatedContext.Provider>
   );

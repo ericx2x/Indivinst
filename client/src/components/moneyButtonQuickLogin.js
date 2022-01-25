@@ -19,10 +19,10 @@ const QuickLogin = props => {
   //const [id, setId] = useState('');
   const {Id, setId} = useContext(IdContext);
   //TODO: Get user profile/balance to be usecontext alongside id? or remove them?
-  ////const [userProfile, setUserProfile] = useState('');
-  //const {userProfile, setUserProfile} = useContext(UserProfileContext);
+  //const [userProfile, setUserProfile] = useState('');
+  const {UserProfile, setUserProfile} = useContext(UserProfileContext);
   //const [balance, setBalance] = useState(0);
-  //const {balance, setBalance} = useContext(BalanceContext);
+  const {Balance, setBalance} = useContext(BalanceContext);
   const [opReturnData, setOpReturnData] = useState('');
   const {Authenticated, setAuthenticated} = useContext(AuthenticatedContext);
   const [pass, setPass] = useState('');
@@ -51,37 +51,21 @@ const QuickLogin = props => {
       mbClient.handleAuthorizationResponse()
     ) {
       const {id: userId} = await mbClient.getIdentity();
-      //const profile = await mbClient.getUserProfile(userId);
-      //const balance = await mbClient.getBalance(userId);
+      const profile = await mbClient.getUserProfile(userId);
+      const balance = await mbClient.getBalance(userId);
       setId(userId);
-      //setUserProfile(JSON.stringify(profile));
-      //setBalance(JSON.stringify(balance));
+      setUserProfile(JSON.stringify(profile));
+      setBalance(JSON.stringify(balance));
     }
   }, []);
 
-  useEffect(()=>{
-      console.log('auth', Authenticated);
-      console.log('id', Id);
-      setAuthenticated(true);
-
-  }, [Id]);
-
-  const retrieveMbData = async () => {
-    window.location.pathname.includes('oauth-response-web') &&
-      mbClient.handleAuthorizationResponse();
-
-    const {id: userId} = await mbClient.getIdentity();
-    const profile = await mbClient.getUserProfile(userId);
-    const balance = await mbClient.getBalance(userId);
-    //setId(userId);
-    //setUserProfile(JSON.stringify(profile));
-    //setBalance(JSON.stringify(balance));
-
-    //mbClient.handleAuthorizationResponse().then(() => {
-    //mbClient.getIdentity();
-    //console.log('idi', mbClient.getIdentity())
-    //});
-  };
+  useEffect(() => {
+    //console.log('auth', Authenticated);
+    //console.log('id', Id);
+    //console.log('userProfile', UserProfile);
+    //console.log('balance', Balance);
+    setAuthenticated(true);
+  }, [Id, UserProfile, Balance]);
 
   const handleMBRequestAuthorization = () => {
     mbClient.requestAuthorization(

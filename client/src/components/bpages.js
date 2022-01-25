@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
-import {AuthenticatedContext} from '../Indivinst';
+import {AuthenticatedContext, UserProfileContext} from '../Indivinst';
 //import IndivinstMoneyButton from './indivinstMoneyButton';
 import {
   collectIdAndOrPostEachBranch,
@@ -10,6 +10,8 @@ import {
 } from '../utils/bpagePipelineHelper';
 
 axios.defaults.withCredentials = true;
+
+//TODO: High priority. If authenticated and on the first path is the users userprofile.paymail then show the textbox and allow post requests. Make sure reinhardt@moneybutton.com shows its shit
 
 const Bpages = props => {
   const [txid, setTxId] = useState('');
@@ -27,6 +29,13 @@ const Bpages = props => {
   const textAreaRef = useRef(null);
 
   const {Authenticated} = useContext(AuthenticatedContext);
+  const {UserProfile} = useContext(UserProfileContext);
+
+  let paths = Object.values(props.match.params);
+  const onUserPage = paths[0] === UserProfile.primaryPaymail ? true : false;
+
+  console.log('authenti', Authenticated);
+  console.log('userpayamil', UserProfile);
 
   useEffect(async () => {
     setChildBpages([]); //This line resolves a bug where the childbpages dont render. Not sure why. Guess you have to do this and it's a weird oddity of React.
@@ -202,7 +211,7 @@ const Bpages = props => {
 
       const updateBpage = async passedUpdateData => {
         try {
-          if (Authenticated) {
+          if (Authenticated && onUserPage) {
             if (!!value) {
               updateBpageAndVerification(passedUpdateData);
             }
@@ -259,7 +268,7 @@ const Bpages = props => {
   };
 
   const handlePrivate = () => {
-    if (Authenticated) {
+    if (Authenticated && onUserPage) {
       if (isPrivateBpage) {
         setIsPrivateBpage(0);
         setPrivateText('Private Mode Is Off');
@@ -302,7 +311,7 @@ const Bpages = props => {
   };
 
   var hidden = {
-    display: !Authenticated ? 'none' : 'inline-block',
+    display: !Authenticated && !onUserPage ? 'none' : 'inline-block',
   };
 
   const setPinBpage = async () => {
@@ -352,11 +361,11 @@ const Bpages = props => {
       </Link>
       <div
         className={`header ${
-          isPrivateBpage && Authenticated && 'pure-button-primary'
+          isPrivateBpage && Authenticated && onUserPage && 'pure-button-primary'
         }`}>
         <h1>{toTitleCase(props.match.params.id)}</h1>
         <br />
-        {(!isPrivateBpage || Authenticated) && (
+        {(!isPrivateBpage || (Authenticated && onUserPage)) && (
           <ul className="subbpages-list">
             {childBpages.map((e, i) => {
               return (
@@ -374,14 +383,17 @@ const Bpages = props => {
       <br />
 
       <div className="bpageContent">
-        <div className={`leftSide ${!Authenticated ? 'makeCenter' : ''}`}>
-          {(!isPrivateBpage || Authenticated) && (
+        <div
+          className={`leftSide ${
+            !Authenticated && onUserPage ? 'makeCenter' : ''
+          }`}>
+          {(!isPrivateBpage || (Authenticated && onUserPage)) && (
             <div dangerouslySetInnerHTML={{__html: unescape(value)}} />
           )}
           <p>Date Modified: {dateModified}</p>
           <p>Date Created: {dateCreated}</p>
         </div>
-        {Authenticated && (
+        {Authenticated && onUserPage && (
           <div className="rightSide">
             <div className="topRow">
               <p className="verificationMessage">{verificationMessage} </p>
