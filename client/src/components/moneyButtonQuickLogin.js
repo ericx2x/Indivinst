@@ -6,6 +6,8 @@ import {
   UserProfileContext,
   BalanceContext,
 } from '../Indivinst';
+import {getCookie} from '../utils/cookieHelper';
+
 const {MoneyButtonClient} = require('@moneybutton/api-client');
 const mbClient = new MoneyButtonClient('ab0a912ef51c1cc9bd6d7d9433fbc3c0'); //TODO: is this safe to keep here?//oauth identifier
 
@@ -20,32 +22,15 @@ const QuickLogin = props => {
   const {Id, setId} = useContext(IdContext);
   //TODO: Get user profile/balance to be usecontext alongside id? or remove them?
   //const [userProfile, setUserProfile] = useState('');
-  const {UserProfile, setUserProfile} = useContext(UserProfileContext);
   //const [balance, setBalance] = useState(0);
-  const {Balance, setBalance} = useContext(BalanceContext);
-  const [opReturnData, setOpReturnData] = useState('');
+  //const [opReturnData, setOpReturnData] = useState('');
   const {Authenticated, setAuthenticated} = useContext(AuthenticatedContext);
-  const [pass, setPass] = useState('');
-  const [incorrectPassword, setIncorrectPassword] = useState('');
+  const {UserProfile, setUserProfile} = useContext(UserProfileContext);
+  const {Balance, setBalance} = useContext(BalanceContext);
 
-  useEffect(async () => {
-    //axios
-    //.get(`${props.baseURL}/api/password/${pass}`)
-    //.then(response => {
-    //if (response.data.logged) {
-    //setAuthenticated(true);
-    //}
-    //})
-    //.catch(function (error) {
-    //return JSON.stringify(error);
-    //});
-    //
-    //
-    //
-    //console.log(
-    //'mbClient.handleAuthorizationResponse()',
-    //await mbClient.handleAuthorizationResponse(),
-    //);
+  //const mbPromise = MakeQuerablePromise(mbClient.handleAuthorizationResponse());
+
+  const getMBData = async () => {
     if (
       window.location.pathname.includes('oauth-response-web') &&
       mbClient.handleAuthorizationResponse()
@@ -53,18 +38,31 @@ const QuickLogin = props => {
       const {id: userId} = await mbClient.getIdentity();
       const profile = await mbClient.getUserProfile(userId);
       const balance = await mbClient.getBalance(userId);
+      //console.log('resp', mbClient.handleAuthorizationResponse())
+      //console.log('res', res)
+      //console.log('id', userId);
+      //console.log('userProfile ', JSON.stringify(profile));
+      //console.log('balance ', JSON.stringify(balance));
       setId(userId);
       setUserProfile(JSON.stringify(profile));
       setBalance(JSON.stringify(balance));
+      document.cookie = `username=${profile.primaryPaymail}`;
     }
+    //mbClient.handleAuthorizationResponse().then(() => {
+    //mbClient.getIdentity();
+    //console.log('idi', mbClient.getIdentity())
+    //});
+  };
+
+  useEffect(() => {
+    getMBData();
   }, []);
 
   useEffect(() => {
-    //console.log('auth', Authenticated);
-    //console.log('id', Id);
-    //console.log('userProfile', UserProfile);
-    //console.log('balance', Balance);
-    setAuthenticated(true);
+    if (getCookie('username') !== '') {
+      setAuthenticated(true);
+    }
+    //setUserProfile(UserProfile);
   }, [Id, UserProfile, Balance]);
 
   const handleMBRequestAuthorization = () => {
@@ -74,79 +72,29 @@ const QuickLogin = props => {
     );
   };
 
-  const handleSubmitPass = e => {
-    axios
-      .post(`${props.baseURL}/api/password`, {password: sha256(pass)})
-      .then(response => {
-        if (response.data === 'logged') {
-          setAuthenticated(true);
-        } else {
-          setIncorrectPassword("You've entered an incorrect password.");
-          setTimeout(() => {
-            setIncorrectPassword('');
-          }, 2000);
-        }
-      })
-      .catch(function (error) {
-        return JSON.stringify(error);
-      });
-    e.preventDefault();
-  };
-
   const handleLogout = () => {
-    //axios
-    //.post(`${props.baseURL}/api/password/logout`)
-    //.then(response => {
-    //setAuthenticated(false);
-    //})
-    //.catch(function (error) {
-    //return JSON.stringify(error);
-    //});
-  };
-
-  let passwordShownStyle = {
-    display: !Authenticated ? 'block' : 'none',
-  };
-
-  let hidden = {
-    display: !Authenticated ? 'none' : 'block',
+    setAuthenticated(false);
+    document.cookie =
+      'username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   };
 
   return (
     <div>
-      <form
-        style={passwordShownStyle}
-        method="get"
-        className="pure-form pure-form-aligned"
-        onSubmit={handleSubmitPass}>
-        <fieldset className="quickLog">
-          <div className="pure-control-group">
-            <div className="pure-control-group">
-              <button
-                //style={hidden}
-                className="pure-button quickLog pure-button-primary logout-button"
-                onClick={e => handleMBRequestAuthorization(e)}
-                alt="MoneyButton Login">
-                xMoneyButton Login
-              </button>
-              <input
-                onChange={event => setPass(event.target.value)}
-                id="quickpassenter"
-                type="password"
-                value={pass}
-                placeholder="Quick Login"
-              />
-              <p className="verificationMessage"> {incorrectPassword} </p>
-            </div>
-          </div>
-        </fieldset>
-      </form>
-      <button
-        style={hidden}
-        className="pure-button quickLog pure-button-primary logout-button"
-        onClick={handleLogout}>
-        MoneyButton Logout
-      </button>
+      {!Authenticated && (
+        <button
+          className="pure-button quickLog pure-button-primary logout-button"
+          onClick={e => handleMBRequestAuthorization(e)}
+          alt="MoneyButton Login">
+          Login
+        </button>
+      )}
+      {Authenticated && (
+        <button
+          className="pure-button quickLog pure-button-primary logout-button"
+          onClick={handleLogout}>
+          Logout
+        </button>
+      )}
     </div>
   );
 };

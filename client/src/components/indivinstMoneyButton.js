@@ -27,21 +27,6 @@ const IndivinstMoneyButton = ({message, baseURL, params, txid}) => {
     );
   };
 
-  //const updateBpageAndVerification = async (passedUpdateData, baseURL, params, txid) => {
-  //collectIdAndOrPostEachBranch(
-  //passedUpdateData,
-  //true,
-  //baseURL,
-  //params,
-  //txid
-  //);
-
-  ////setVerificationMessage('Message was saved.');
-  ////setValue(unescape(value));
-  ////setTimeout(() => {
-  ////setVerificationMessage('');
-  ////}, 2000);
-  //};
 
   const retrieveMbData = async () => {
     window.location.pathname.includes('oauth-response-web') &&
@@ -69,16 +54,16 @@ const IndivinstMoneyButton = ({message, baseURL, params, txid}) => {
   }, []);
 
   //const retrieveTxIdData = async txid => {
-    //try {
-      //const apiData = await fetch(
-        //`https://api.whatsonchain.com/v1/bsv/main/tx/hash/${txid}`,
-      //);
-      //const actualData = await apiData.json();
-      //return actualData;
-    //} catch (e) {
-      //console.error(e);
-      //return console.error(e);
-    //}
+  //try {
+  //const apiData = await fetch(
+  //`https://api.whatsonchain.com/v1/bsv/main/tx/hash/${txid}`,
+  //);
+  //const actualData = await apiData.json();
+  //return actualData;
+  //} catch (e) {
+  //console.error(e);
+  //return console.error(e);
+  //}
   //};
 
   useEffect(() => {
@@ -104,7 +89,7 @@ const IndivinstMoneyButton = ({message, baseURL, params, txid}) => {
   function onbuttonclick() {
     //console.log('hit');
     collectIdAndOrPostEachBranch(
-      'message value data',
+      'this was saved from the button on click test',
       true,
       baseURL,
       params,
@@ -113,43 +98,22 @@ const IndivinstMoneyButton = ({message, baseURL, params, txid}) => {
   }
 
   function myOnPaymentCallback(payment) {
-    //console.log('baseURL', baseURL);
-    //console.log('params', params);
-    //updateBpageAndVerification(payment.txid, baseURL, params, payment.txid);
-    collectIdAndOrPostEachBranch(message, true, baseURL, params, payment.txid);
+    collectIdAndOrPostEachBranch(message, true, baseURL, params, payment.txid);// For some reason this keeps the page constaly on inital load
 
     console.log('A payment has occurred!', payment); //TODO: Then try to use txid to get the op_return ending hex and convert it to the bpage messages
   }
 
   return (
     <div className="homepage">
-      <h2>BpageMoneyButton</h2>
-      <button onClick={onbuttonclick}>Button to test</button>
-      <br />
-      Login Credentials:
-      <br />
-      <b>Id:</b>
-      {id}
-      <br />
-      <b>User Profile: </b>
-      {userProfile}
-      <br />
-      <b>Balance: </b>
-      {balance}
-      <br />
-      <button onClick={e => handleMBRequestAuthorization(e)}>
-        oAuth MoneyButton API data retrival
-      </button>
-      <div>
-        <h3>opReturnDataTest</h3>
-        {opReturnData}
-        <MoneyButton
-          to={opReturnData} //address of an address when sending a tx back to reinhardt@moneybutton.com
-          amount={'0.00000105'} //increase/decrease this depending on the date miners may not accept transactions that are too low.
-          currency={'BSV'}
-          onPayment={myOnPaymentCallback}
-        />
-      </div>
+      <h2>IndivinstMoneyButton</h2>
+            <button onClick={onbuttonclick}>Button to test</button>
+
+      <MoneyButton//TODO: this moneybutton makes the page keep loading
+        to={opReturnData} //address of an address when sending a tx back to reinhardt@moneybutton.com
+        amount={'0.0000055'} //increase/decrease this depending on the date miners may not accept transactions that are too low.
+        currency={'BSV'}
+        onPayment={myOnPaymentCallback}
+      />
     </div>
   );
 };

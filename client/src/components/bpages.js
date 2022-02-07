@@ -1,13 +1,18 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
-import {AuthenticatedContext, UserProfileContext} from '../Indivinst';
-//import IndivinstMoneyButton from './indivinstMoneyButton';
+import {
+  AuthenticatedContext,
+  IdContext,
+  UserProfileContext,
+} from '../Indivinst';
+import IndivinstMoneyButton from './indivinstMoneyButton';
 import {
   collectIdAndOrPostEachBranch,
   moveBpage,
   getBpageData,
 } from '../utils/bpagePipelineHelper';
+import {getCookie} from '../utils/cookieHelper';
 
 axios.defaults.withCredentials = true;
 
@@ -22,7 +27,6 @@ const Bpages = props => {
   const [dateModified, setDateModified] = useState(null);
   const [dateCreated, setDateCreated] = useState(null);
   const [childBpages, setChildBpages] = useState([]);
-  const [loadOnce, setLoadOnce] = useState(false);
   const [value, setValue] = useState('');
   const [dataCurrentBpage, setDataCurrentBpage] = useState({});
 
@@ -30,12 +34,18 @@ const Bpages = props => {
 
   const {Authenticated} = useContext(AuthenticatedContext);
   const {UserProfile} = useContext(UserProfileContext);
+  const {Id} = useContext(IdContext);
 
   let paths = Object.values(props.match.params);
-  const onUserPage = paths[0] === UserProfile.primaryPaymail ? true : false;
 
-  console.log('authenti', Authenticated);
-  console.log('userpayamil', UserProfile);
+  //const onUserPage = paths[0] === UserProfile.primaryPaymail ? true : false;
+  const onUserPage = paths[0] === getCookie('username') ? true : false;
+
+  //console.log('getCookie', getCookie('username'));
+
+  //console.log('authenti', Authenticated);
+  //console.log('userpayamil', UserProfile);
+  //console.log('Id', Id);
 
   useEffect(async () => {
     setChildBpages([]); //This line resolves a bug where the childbpages dont render. Not sure why. Guess you have to do this and it's a weird oddity of React.
@@ -43,11 +53,15 @@ const Bpages = props => {
     afterBpageGet(response);
 
     if (response.data[0]) {
-      const apiData = await retrieveTxIdData(response.data[0].transaction_id);
-      apiData && setValue(apiData.vout[0].scriptPubKey.opReturn.parts[2]);
-      console.log('retrieveTxIdData', apiData);
+      //const apiData = await retrieveTxIdData(response.data[0].transaction_id);
+      //console.log('retrieveTxIdData', apiData);
+      //(apiData && apiData.vout[0].scriptPubKey.opReturn && apiData.vout[0].scriptPubKey.opReturn.parts[2]) ?  setValue(apiData.vout[0].scriptPubKey.opReturn.parts[2]) : setValue("Error: Null OP Return retrival") ;
     }
   }, []);
+
+  function myOnPaymentCallback(payment) {
+    console.log('A psayment has occurred!', payment);
+  }
 
   const retrieveTxIdData = async txid => {
     try {
@@ -69,21 +83,12 @@ const Bpages = props => {
     }
   }, [dataCurrentBpage]);
 
-  useEffect(() => {
-    const e = {};
-    e.preventDefault = () => {
-      return false;
-    };
-
-    const waitTwoSecondsBeforeSubmitting = setTimeout(() => {
-      if (!loadOnce) {
-        setLoadOnce(true);
-      } else {
-        handleSubmit(e);
-      }
-    }, 1000);
-    return () => clearTimeout(waitTwoSecondsBeforeSubmitting);
-  }, [value]);
+  //useEffect(() => {
+  //const waitTwoSecondsBeforeSubmitting = setTimeout(() => {
+  //handleSubmit();
+  //}, 1000);
+  //return () => clearTimeout(waitTwoSecondsBeforeSubmitting);
+  //}, [value]);
 
   const afterBpageGet = response => {
     if (!!response.data[0] && response.data[0].date_created) {
@@ -227,7 +232,7 @@ const Bpages = props => {
 
       setDateCreated(formatDate());
     }
-    e.preventDefault();
+    e && e.preventDefault();
   };
 
   const handleDelete = () => {
@@ -338,12 +343,6 @@ const Bpages = props => {
 
   return (
     <div className="bpages">
-      {/*<IndivinstMoneyButton
-        message={value}
-        baseURL={props.baseURL}
-        params={props.match.params}
-        txid={txid.transaction_id}
-      />*/}
       <Link
         className="pure-button backToParent"
         to={props.match.url.substring(
@@ -449,6 +448,12 @@ const Bpages = props => {
                     />
                   </div>
                 </div>
+                <IndivinstMoneyButton
+                  message={value}
+                  baseURL={props.baseURL}
+                  params={props.match.params}
+                  txid={txid.transaction_id}
+                />
                 <button
                   type="submit"
                   onClick={handleSubmit}

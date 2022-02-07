@@ -9,8 +9,8 @@ import {
 
 import {retrievePaths} from './utils/bpagePipelineHelper';
 import Bpages from './components/bpages';
-import MoneyButtonLogin from './components/moneyButtonLogin';
-//import Login from './components/login';
+//import MoneyButtonLogin from './components/moneyButtonLogin';
+import Login from './components/login';
 import AllBpages from './components/allBpages';
 import MoneyButtonQuickLogin from './components/moneyButtonQuickLogin';
 import MetaHead from './components/MetaHead';
@@ -137,13 +137,6 @@ const App = () => {
                                 All Bpages
                               </a>
                             </li>
-                            <li className="pure-menu-item" key="2">
-                              <a
-                                className="pure-menu-link"
-                                href={`/moneyButtonLogin`}>
-                                MoneyButtonLogin
-                              </a>
-                            </li>
                             {pinBpages.map((bpage, index) => {
                               return (
                                 <li className="pure-menu-item" key={index}>
@@ -162,28 +155,19 @@ const App = () => {
                         <Route
                           path={'/MoneyButtonLogin'}
                           render={routeProps => (
-                            <MoneyButtonLogin
-                              {...routeProps}
-                              baseURL={baseURL}
-                            />
+                            <nLogin {...routeProps} baseURL={baseURL} />
                           )}
                         />
                         <Route
                           path={'/oauth-response-web'}
                           render={routeProps => (
-                            <MoneyButtonLogin
-                              {...routeProps}
-                              baseURL={baseURL}
-                            />
+                            <Login {...routeProps} baseURL={baseURL} />
                           )}
                         />
                         <Route
                           path={'/oauth/v1/authorize'}
                           render={routeProps => (
-                            <MoneyButtonLogin
-                              {...routeProps}
-                              baseURL={baseURL}
-                            />
+                            <Login {...routeProps} baseURL={baseURL} />
                           )}
                         />
                         <Route
