@@ -185,65 +185,65 @@ const Bpages = props => {
     return txt.value;
   };
 
-  const updateBpageAndVerification = async passedUpdateData => {
-    collectIdAndOrPostEachBranch(
-      passedUpdateData,
-      true,
-      props.baseURL,
-      props.match.params,
-    );
+  //const updateBpageAndVerification = async passedUpdateData => {
+    //collectIdAndOrPostEachBranch(
+      //passedUpdateData,
+      //true,
+      //props.baseURL,
+      //props.match.params,
+    //);
 
-    setVerificationMessage('Message was saved.');
-    setValue(unescape(value));
-    setTimeout(() => {
-      setVerificationMessage('');
-    }, 2000);
-  };
+    //setVerificationMessage('Message was saved.');
+    //setValue(unescape(value));
+    //setTimeout(() => {
+      //setVerificationMessage('');
+    //}, 2000);
+  //};
 
-  const formatDate = () => {
-    var d = new Date(),
-      month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
-      year = d.getFullYear();
+  //const formatDate = () => {
+    //var d = new Date(),
+      //month = '' + (d.getMonth() + 1),
+      //day = '' + d.getDate(),
+      //year = d.getFullYear();
 
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
+    //if (month.length < 2) month = '0' + month;
+    //if (day.length < 2) day = '0' + day;
 
-    return [year, month, day].join('-');
-  };
+    //return [year, month, day].join('-');
+  //};
 
-  const handleSubmit = e => {
-    let passedUpdateData = value;
-    if (passedUpdateData) {
-      //sql statements seem to error unless we replace these characters before making a query.
-      passedUpdateData = encodeURIComponent(passedUpdateData);
-      passedUpdateData = passedUpdateData
-        .replace(/;/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+  //const handleSubmit = e => {
+    //let passedUpdateData = value;
+    //if (passedUpdateData) {
+      ////sql statements seem to error unless we replace these characters before making a query.
+      //passedUpdateData = encodeURIComponent(passedUpdateData);
+      //passedUpdateData = passedUpdateData
+        //.replace(/;/g, '&amp;')
+        //.replace(/</g, '&lt;')
+        //.replace(/>/g, '&gt;')
+        //.replace(/"/g, '&quot;')
+        //.replace(/'/g, '&#39;');
 
-      const updateBpage = async passedUpdateData => {
-        try {
-          if (Authenticated && onUserPage) {
-            if (!!value) {
-              updateBpageAndVerification(passedUpdateData);
-            }
-          }
-        } catch (error) {
-          setVerificationMessage('Some kind of error occured:' + error);
-          setValue(unescape(value));
-          console.error(error);
-        }
-      };
+      //const updateBpage = async passedUpdateData => {
+        //try {
+          //if (Authenticated && onUserPage) {
+            //if (!!value) {
+              //updateBpageAndVerification(passedUpdateData);
+            //}
+          //}
+        //} catch (error) {
+          //setVerificationMessage('Some kind of error occured:' + error);
+          //setValue(unescape(value));
+          //console.error(error);
+        //}
+      //};
 
-      updateBpage(passedUpdateData);
+      //updateBpage(passedUpdateData);
 
-      setDateCreated(formatDate());
-    }
-    e && e.preventDefault();
-  };
+      //setDateCreated(formatDate());
+    //}
+    //e && e.preventDefault();
+  //};
 
   const handleDelete = () => {
     if (!!childBpages.length) {
@@ -252,7 +252,7 @@ const Bpages = props => {
     }
     if (
       window.confirm(
-        'Are you sure you want to delete this record from the database?',
+        "Are you sure you want to delete this record from the site? This won't delete the original transaction from the blockchain.",
       )
     ) {
       if (window.confirm('Really delete?')) {
@@ -464,12 +464,12 @@ const Bpages = props => {
                   params={props.match.params}
                   txid={txid.transaction_id}
                 />
-                <button
+                {/*<button
                   type="submit"
                   onClick={handleSubmit}
                   className="pure-button pure-button-primary messageSubmit-button">
                   Submit
-                </button>
+                </button>*/}
                 <button
                   className="pure-button pure-button-primary deleteBpage-button"
                   onClick={handleDelete}>

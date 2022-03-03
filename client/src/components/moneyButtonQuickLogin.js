@@ -20,10 +20,6 @@ const QuickLogin = props => {
 
   //const [id, setId] = useState('');
   const {Id, setId} = useContext(IdContext);
-  //TODO: Get user profile/balance to be usecontext alongside id? or remove them?
-  //const [userProfile, setUserProfile] = useState('');
-  //const [balance, setBalance] = useState(0);
-  //const [opReturnData, setOpReturnData] = useState('');
   const {Authenticated, setAuthenticated} = useContext(AuthenticatedContext);
   const {UserProfile, setUserProfile} = useContext(UserProfileContext);
   const {Balance, setBalance} = useContext(BalanceContext);
@@ -46,8 +42,8 @@ const QuickLogin = props => {
       setId(userId);
       setUserProfile(JSON.stringify(profile));
       setBalance(JSON.stringify(balance));
+      if(Balance && UserProfile && Id)  return '';
       //document.cookie = `username=${profile.primaryPaymail}`;
-      console.log('hi', Authenticated);
     }
     //mbClient.handleAuthorizationResponse().then(() => {
     //mbClient.getIdentity();
@@ -59,17 +55,17 @@ const QuickLogin = props => {
     getMBData();
   }, []);
 
-  useEffect(async () => {
-    //const oauthState = localStorage.getItem('mb_js_client:oauth_state');
-    //if (oauthState !== '') {
-    const {id} = await mbClient.getIdentity();
-    //console.log(`The id is ${id} and the name is ${name}`);
+  //useEffect(async () => {
+    ////const oauthState = localStorage.getItem('mb_js_client:oauth_state');
+    ////if (oauthState !== '') {
+    //const {id} = await mbClient.getIdentity();
+    ////console.log(`The id is ${id} and the name is ${name}`);
 
-    //if (id !== '') {
-    //setAuthenticated(true);
-    //}
-    //setUserProfile(UserProfile);
-  }, [Id, UserProfile, Balance]);
+    ////if (id !== '') {
+    ////setAuthenticated(true);
+    ////}
+    ////setUserProfile(UserProfile);
+  //}, [Id, UserProfile, Balance]);
 
   const handleMBRequestAuthorization = () => {
     mbClient.requestAuthorization(

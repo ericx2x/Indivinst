@@ -200,7 +200,16 @@ const App = () => {
                           path={'/'}
                           render={() => (
                             <div className="vertical-center">
-                              <h3>This is Eric Lima's bpages website.</h3>
+                              <h3>
+                                This is the individual institute website
+                                homepage.{' '}
+                              </h3>
+                              <p>
+                                Login and write your paymail in the first path
+                                to start writing. Or you can read what other
+                                people have written by clicking the all bpages
+                                button on the sidebar.
+                              </p>
                             </div>
                           )}
                         />

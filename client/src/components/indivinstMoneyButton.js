@@ -41,15 +41,15 @@ const IndivinstMoneyButton = ({message, baseURL, params}) => {
     setOpReturnData(opReturnDataAsm);
   }, [message]);
 
-  function onbuttonclick() {
-    collectIdAndOrPostEachBranch(
-      'this was saved from the button on click test',
-      true,
-      baseURL,
-      params,
-      '00dce72a9ec6e9abbd4e69161fe9e74504f5eb91cb4c775b03e05a581d5e6035',
-    );
-  }
+  //function onbuttonclick() {
+    //collectIdAndOrPostEachBranch(
+      //'this was saved from the button on click test',
+      //true,
+      //baseURL,
+      //params,
+      //'00dce72a9ec6e9abbd4e69161fe9e74504f5eb91cb4c775b03e05a581d5e6035',
+    //);
+  //}
 
   function myOnPaymentCallback(payment) {
     collectIdAndOrPostEachBranch(message, true, baseURL, params, payment.txid);// For some reason this keeps the page constaly on inital load
@@ -57,10 +57,10 @@ const IndivinstMoneyButton = ({message, baseURL, params}) => {
     //console.log('A payment has occurred!', payment);
   }
 
+            //<button onClick={onbuttonclick}>Button to test</button>
   return (
     <div className="homepage">
       <h2>IndivinstMoneyButton</h2>
-            <button onClick={onbuttonclick}>Button to test</button>
 
       <MoneyButton//TODO: this moneybutton makes the page keep loading
         to={opReturnData} //address of an address when sending a tx back to reinhardt@moneybutton.com
