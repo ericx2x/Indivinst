@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useContext} from 'react';
 import axios from 'axios';
 import {
   AuthenticatedContext,
@@ -11,7 +11,7 @@ import {getCookie} from '../utils/cookieHelper';
 const {MoneyButtonClient} = require('@moneybutton/api-client');
 const mbClient = new MoneyButtonClient('ab0a912ef51c1cc9bd6d7d9433fbc3c0'); //TODO: is this safe to keep here?//oauth identifier
 
-var sha256 = require('sha256');
+//var sha256 = require('sha256');
 
 axios.defaults.withCredentials = true;
 
@@ -59,6 +59,8 @@ const QuickLogin = props => {
   }, []);
 
   useEffect(() => {
+    //const oauthState = localStorage.getItem('mb_js_client:oauth_state');
+    //if (oauthState !== '') {
     if (getCookie('username') !== '') {
       setAuthenticated(true);
     }

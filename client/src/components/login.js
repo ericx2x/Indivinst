@@ -5,7 +5,7 @@ import {AuthenticatedContext} from '../Indivinst';
 axios.defaults.withCredentials = true;
 
 const Login = () => {
-  const {Authenticated, setAuthenticated} = useContext(AuthenticatedContext);
+  const {Authenticated} = useContext(AuthenticatedContext);
 
   return (
     <div className="login">

@@ -20,8 +20,7 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "1.1.4",
-    "sha256": "^0.2.0",
-    "whatwg-fetch": "^3.6.2"
+    "sha256": "^0.2.0"
   },
   "scripts": {
     "start": "PORT=9008 react-scripts start",

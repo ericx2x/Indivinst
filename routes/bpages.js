@@ -1,6 +1,4 @@
 var express = require('express');
-const needle = require('needle');
-const fetch = require('whatwg-fetch');
 var router = express.Router();
 //var cors = require('cors');
 var app = express();

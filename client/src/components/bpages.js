@@ -3,8 +3,8 @@ import axios from 'axios';
 import {Link} from 'react-router-dom';
 import {
   AuthenticatedContext,
-  IdContext,
-  UserProfileContext,
+  //IdContext,
+  //UserProfileContext,
 } from '../Indivinst';
 import IndivinstMoneyButton from './indivinstMoneyButton';
 import {
@@ -12,11 +12,12 @@ import {
   moveBpage,
   getBpageData,
 } from '../utils/bpagePipelineHelper';
-import {getCookie} from '../utils/cookieHelper';
+//import {getCookie} from '../utils/cookieHelper';
 
 axios.defaults.withCredentials = true;
 
-//TODO: High priority. If authenticated and on the first path is the users userprofile.paymail then show the textbox and allow post requests. Make sure reinhardt@moneybutton.com shows its shit
+const {MoneyButtonClient} = require('@moneybutton/api-client');
+const mbClient = new MoneyButtonClient('ab0a912ef51c1cc9bd6d7d9433fbc3c0'); //TODO: is this safe to keep here?//oauth identifier
 
 const Bpages = props => {
   const [txid, setTxId] = useState('');
@@ -29,17 +30,18 @@ const Bpages = props => {
   const [childBpages, setChildBpages] = useState([]);
   const [value, setValue] = useState('');
   const [dataCurrentBpage, setDataCurrentBpage] = useState({});
+  const [onUserPage, setOnUserPage] = useState('');
 
   const textAreaRef = useRef(null);
 
   const {Authenticated} = useContext(AuthenticatedContext);
-  const {UserProfile} = useContext(UserProfileContext);
-  const {Id} = useContext(IdContext);
+  //const {UserProfile} = useContext(UserProfileContext);
+  //const {Id} = useContext(IdContext);
 
   let paths = Object.values(props.match.params);
 
   //const onUserPage = paths[0] === UserProfile.primaryPaymail ? true : false;
-  const onUserPage = paths[0] === getCookie('username') ? true : false;
+  //const onUserPage = paths[0] === getCookie('username') ? true : false; //TODO: remove this cookie username entirely? also in quickloginmoneybutton
 
   //console.log('getCookie', getCookie('username'));
 
@@ -48,6 +50,14 @@ const Bpages = props => {
   //console.log('Id', Id);
 
   useEffect(async () => {
+    const {id, name} = await mbClient.getIdentity();
+    console.log(`The id is ${id} and the name is ${name}`);
+
+    const {id: userId} = await mbClient.getIdentity();
+    const profile = await mbClient.getUserProfile(userId);
+    console.log('x', profile);
+    if(profile.primaryPaymail === paths[0]) setOnUserPage(true);
+
     setChildBpages([]); //This line resolves a bug where the childbpages dont render. Not sure why. Guess you have to do this and it's a weird oddity of React.
     const response = await getBpageData(props.baseURL, props.match.params);
     afterBpageGet(response);
@@ -59,22 +69,22 @@ const Bpages = props => {
     }
   }, []);
 
-  function myOnPaymentCallback(payment) {
-    console.log('A psayment has occurred!', payment);
-  }
+  //function myOnPaymentCallback(payment) {
+  //console.log('A psayment has occurred!', payment);
+  //}
 
-  const retrieveTxIdData = async txid => {
-    try {
-      const apiData = await fetch(
-        `https://api.whatsonchain.com/v1/bsv/main/tx/hash/${txid}`,
-      );
-      const actualData = await apiData.json();
-      return actualData;
-    } catch (e) {
-      console.error(e);
-      return console.error(e);
-    }
-  };
+  //const retrieveTxIdData = async txid => {
+  //try {
+  //const apiData = await fetch(
+  //`https://api.whatsonchain.com/v1/bsv/main/tx/hash/${txid}`,
+  //);
+  //const actualData = await apiData.json();
+  //return actualData;
+  //} catch (e) {
+  //console.error(e);
+  //return console.error(e);
+  //}
+  //};
 
   useEffect(async () => {
     if (dataCurrentBpage.data) {
