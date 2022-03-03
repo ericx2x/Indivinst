@@ -6,7 +6,7 @@ import {
   UserProfileContext,
   BalanceContext,
 } from '../Indivinst';
-import {getCookie} from '../utils/cookieHelper';
+//import {getCookie} from '../utils/cookieHelper';
 
 const {MoneyButtonClient} = require('@moneybutton/api-client');
 const mbClient = new MoneyButtonClient('ab0a912ef51c1cc9bd6d7d9433fbc3c0'); //TODO: is this safe to keep here?//oauth identifier
@@ -46,7 +46,8 @@ const QuickLogin = props => {
       setId(userId);
       setUserProfile(JSON.stringify(profile));
       setBalance(JSON.stringify(balance));
-      document.cookie = `username=${profile.primaryPaymail}`;
+      //document.cookie = `username=${profile.primaryPaymail}`;
+      console.log('hi', Authenticated);
     }
     //mbClient.handleAuthorizationResponse().then(() => {
     //mbClient.getIdentity();
@@ -58,12 +59,15 @@ const QuickLogin = props => {
     getMBData();
   }, []);
 
-  useEffect(() => {
+  useEffect(async () => {
     //const oauthState = localStorage.getItem('mb_js_client:oauth_state');
     //if (oauthState !== '') {
-    if (getCookie('username') !== '') {
-      setAuthenticated(true);
-    }
+    const {id} = await mbClient.getIdentity();
+    //console.log(`The id is ${id} and the name is ${name}`);
+
+    //if (id !== '') {
+    //setAuthenticated(true);
+    //}
     //setUserProfile(UserProfile);
   }, [Id, UserProfile, Balance]);
 
@@ -72,12 +76,20 @@ const QuickLogin = props => {
       'auth.user_identity:read users.profiles:read users.balance:read',
       'http://localhost:9008/oauth-response-web',
     );
+    setAuthenticated(true);
+  };
+
+  const removeMoneyButtonItemsInLocalStorage = () => {
+    window.localStorage.removeItem('mb_js_client:oauth_access_token');
+    window.localStorage.removeItem('mb_js_client:oauth_expiration_time');
+    window.localStorage.removeItem('mb_js_client:oauth_state');
+    window.localStorage.removeItem('mb_js_client:oauth_refresh_token');
+    window.localStorage.removeItem('mb_js_client:oauth_redirect_uri');
   };
 
   const handleLogout = () => {
+    removeMoneyButtonItemsInLocalStorage();
     setAuthenticated(false);
-    document.cookie =
-      'username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   };
 
   return (

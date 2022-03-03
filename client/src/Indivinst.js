@@ -27,7 +27,11 @@ export const BalanceContext = React.createContext();
 const App = () => {
   const [activeMenu, setActiveMenu] = useState('');
   const [pinBpages, setPinBpages] = useState([]);
-  const [Authenticated, setAuthenticated] = useState(false);
+  const [Authenticated, setAuthenticated] = useState(
+    window.localStorage.getItem('mb_js_client:oauth_access_token') !== ''
+      ? true
+      : false,
+  );
   const AuthenticatedContextValue = {Authenticated, setAuthenticated};
   const [Id, setId] = useState('');
   const IdContextValue = {Id, setId};

@@ -75,7 +75,7 @@ const MoneyButtonLogin = () => {
     //console.log('moneybyttondocs', opReturnDataAsm);
     setOpReturnData(opReturnDataAsm);
 
-    setAuthenticated(true);
+    //setAuthenticated(true);
 
     //bitBusCode();
     //centrifugeCodeScaleTransactions();
