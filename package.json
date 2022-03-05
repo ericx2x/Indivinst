@@ -7,7 +7,7 @@
     "test_m": "nyc mocha",
     "build": "babel src/ -d lib/",
     "test": "jest --watchAll",
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/wwwindiv"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
