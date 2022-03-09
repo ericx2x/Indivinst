@@ -17,7 +17,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-register": "^6.26.0",
     "body-parser": "^1.18.3",
-    "bsv": "2.0.10",
+    "bsv": "1.5.4",
     "centrifuge": "github:centrifugal/centrifuge-js",
     "chai": "^4.1.2",
     "connect-redis": "^3.3.3",

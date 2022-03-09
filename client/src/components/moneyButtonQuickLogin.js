@@ -7,7 +7,7 @@ import {
   BalanceContext,
 } from '../Indivinst';
 //import {getCookie} from '../utils/cookieHelper';
-var config = require('./config/configFront.json');
+var config = require('../config/configFront.json');
 
 const {MoneyButtonClient} = require('@moneybutton/api-client');
 const moneyButtonKey =

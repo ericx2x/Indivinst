@@ -7,6 +7,7 @@ import {
   BalanceContext,
 } from '../Indivinst';
 const {MoneyButtonClient} = require('@moneybutton/api-client');
+var config = require('../config/configFront.json');
 const moneyButtonKey =
   typeof window !== 'undefined' && !window.location.href.includes('localhost')
     ? config.moneybuttonProductionWallet

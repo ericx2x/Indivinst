@@ -4,9 +4,9 @@
   "private": true,
   "proxy": "http://localhost:9009",
   "dependencies": {
-    "@moneybutton/api-client": "^0.38.1",
+    "@moneybutton/api-client": "^0.38.8",
     "@moneybutton/client": "^0.21.1",
-    "@moneybutton/config": "^0.38.5",
+    "@moneybutton/config": "^0.38.8",
     "@moneybutton/react-money-button": "^0.38.8",
     "axios": "^0.17.1",
     "bsv": "1.5.4",
