@@ -7,9 +7,14 @@ import {
   BalanceContext,
 } from '../Indivinst';
 //import {getCookie} from '../utils/cookieHelper';
+var config = require('./config/configFront.json');
 
 const {MoneyButtonClient} = require('@moneybutton/api-client');
-const mbClient = new MoneyButtonClient('ab0a912ef51c1cc9bd6d7d9433fbc3c0'); //TODO: is this safe to keep here?//oauth identifier
+const moneyButtonKey =
+  typeof window !== 'undefined' && !window.location.href.includes('localhost')
+    ? config.moneybuttonProductionWallet
+    : config.moneybuttonLocalhostWallet;
+const mbClient = new MoneyButtonClient(moneyButtonKey);
 
 //var sha256 = require('sha256');
 
@@ -42,7 +47,7 @@ const QuickLogin = props => {
       setId(userId);
       setUserProfile(JSON.stringify(profile));
       setBalance(JSON.stringify(balance));
-      if(Balance && UserProfile && Id)  return '';
+      if (Balance && UserProfile && Id) return '';
       //document.cookie = `username=${profile.primaryPaymail}`;
     }
     //mbClient.handleAuthorizationResponse().then(() => {
@@ -56,15 +61,15 @@ const QuickLogin = props => {
   }, []);
 
   //useEffect(async () => {
-    ////const oauthState = localStorage.getItem('mb_js_client:oauth_state');
-    ////if (oauthState !== '') {
-    //const {id} = await mbClient.getIdentity();
-    ////console.log(`The id is ${id} and the name is ${name}`);
+  ////const oauthState = localStorage.getItem('mb_js_client:oauth_state');
+  ////if (oauthState !== '') {
+  //const {id} = await mbClient.getIdentity();
+  ////console.log(`The id is ${id} and the name is ${name}`);
 
-    ////if (id !== '') {
-    ////setAuthenticated(true);
-    ////}
-    ////setUserProfile(UserProfile);
+  ////if (id !== '') {
+  ////setAuthenticated(true);
+  ////}
+  ////setUserProfile(UserProfile);
   //}, [Id, UserProfile, Balance]);
 
   const handleMBRequestAuthorization = () => {

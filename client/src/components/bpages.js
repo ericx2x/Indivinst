@@ -17,7 +17,11 @@ import {
 axios.defaults.withCredentials = true;
 
 const {MoneyButtonClient} = require('@moneybutton/api-client');
-const mbClient = new MoneyButtonClient('ab0a912ef51c1cc9bd6d7d9433fbc3c0'); //TODO: is this safe to keep here?//oauth identifier
+const moneyButtonKey =
+  typeof window !== 'undefined' && !window.location.href.includes('localhost')
+    ? config.moneybuttonProductionWallet
+    : config.moneybuttonLocalhostWallet;
+const mbClient = new MoneyButtonClient(moneyButtonKey);
 
 const Bpages = props => {
   const [txid, setTxId] = useState('');
@@ -56,7 +60,7 @@ const Bpages = props => {
     const {id: userId} = await mbClient.getIdentity();
     const profile = await mbClient.getUserProfile(userId);
     console.log('x', profile);
-    if(profile.primaryPaymail === paths[0]) setOnUserPage(true);
+    if (profile.primaryPaymail === paths[0]) setOnUserPage(true);
 
     setChildBpages([]); //This line resolves a bug where the childbpages dont render. Not sure why. Guess you have to do this and it's a weird oddity of React.
     const response = await getBpageData(props.baseURL, props.match.params);
@@ -186,63 +190,63 @@ const Bpages = props => {
   };
 
   //const updateBpageAndVerification = async passedUpdateData => {
-    //collectIdAndOrPostEachBranch(
-      //passedUpdateData,
-      //true,
-      //props.baseURL,
-      //props.match.params,
-    //);
+  //collectIdAndOrPostEachBranch(
+  //passedUpdateData,
+  //true,
+  //props.baseURL,
+  //props.match.params,
+  //);
 
-    //setVerificationMessage('Message was saved.');
-    //setValue(unescape(value));
-    //setTimeout(() => {
-      //setVerificationMessage('');
-    //}, 2000);
+  //setVerificationMessage('Message was saved.');
+  //setValue(unescape(value));
+  //setTimeout(() => {
+  //setVerificationMessage('');
+  //}, 2000);
   //};
 
   //const formatDate = () => {
-    //var d = new Date(),
-      //month = '' + (d.getMonth() + 1),
-      //day = '' + d.getDate(),
-      //year = d.getFullYear();
+  //var d = new Date(),
+  //month = '' + (d.getMonth() + 1),
+  //day = '' + d.getDate(),
+  //year = d.getFullYear();
 
-    //if (month.length < 2) month = '0' + month;
-    //if (day.length < 2) day = '0' + day;
+  //if (month.length < 2) month = '0' + month;
+  //if (day.length < 2) day = '0' + day;
 
-    //return [year, month, day].join('-');
+  //return [year, month, day].join('-');
   //};
 
   //const handleSubmit = e => {
-    //let passedUpdateData = value;
-    //if (passedUpdateData) {
-      ////sql statements seem to error unless we replace these characters before making a query.
-      //passedUpdateData = encodeURIComponent(passedUpdateData);
-      //passedUpdateData = passedUpdateData
-        //.replace(/;/g, '&amp;')
-        //.replace(/</g, '&lt;')
-        //.replace(/>/g, '&gt;')
-        //.replace(/"/g, '&quot;')
-        //.replace(/'/g, '&#39;');
+  //let passedUpdateData = value;
+  //if (passedUpdateData) {
+  ////sql statements seem to error unless we replace these characters before making a query.
+  //passedUpdateData = encodeURIComponent(passedUpdateData);
+  //passedUpdateData = passedUpdateData
+  //.replace(/;/g, '&amp;')
+  //.replace(/</g, '&lt;')
+  //.replace(/>/g, '&gt;')
+  //.replace(/"/g, '&quot;')
+  //.replace(/'/g, '&#39;');
 
-      //const updateBpage = async passedUpdateData => {
-        //try {
-          //if (Authenticated && onUserPage) {
-            //if (!!value) {
-              //updateBpageAndVerification(passedUpdateData);
-            //}
-          //}
-        //} catch (error) {
-          //setVerificationMessage('Some kind of error occured:' + error);
-          //setValue(unescape(value));
-          //console.error(error);
-        //}
-      //};
+  //const updateBpage = async passedUpdateData => {
+  //try {
+  //if (Authenticated && onUserPage) {
+  //if (!!value) {
+  //updateBpageAndVerification(passedUpdateData);
+  //}
+  //}
+  //} catch (error) {
+  //setVerificationMessage('Some kind of error occured:' + error);
+  //setValue(unescape(value));
+  //console.error(error);
+  //}
+  //};
 
-      //updateBpage(passedUpdateData);
+  //updateBpage(passedUpdateData);
 
-      //setDateCreated(formatDate());
-    //}
-    //e && e.preventDefault();
+  //setDateCreated(formatDate());
+  //}
+  //e && e.preventDefault();
   //};
 
   const handleDelete = () => {

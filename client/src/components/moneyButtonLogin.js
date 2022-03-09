@@ -7,12 +7,15 @@ import {
   BalanceContext,
 } from '../Indivinst';
 const {MoneyButtonClient} = require('@moneybutton/api-client');
-//const mbClient = new MoneyButtonClient("9becf316ca7bad801f6d30b563e01dd4", "70abe5cd2fff168bba3b6b4e52ffdd11")
-const mbClient = new MoneyButtonClient('ab0a912ef51c1cc9bd6d7d9433fbc3c0'); //TODO: is this safe to keep here?//oauth identifier
+const moneyButtonKey =
+  typeof window !== 'undefined' && !window.location.href.includes('localhost')
+    ? config.moneybuttonProductionWallet
+    : config.moneybuttonLocalhostWallet;
+const mbClient = new MoneyButtonClient(moneyButtonKey);
 const refreshToken = mbClient.getRefreshToken();
 //var Centrifuge = require('centrifuge');
 //import bsv from 'bsv';
-let bsv = require('bsv');
+//let bsv = require('bsv');
 let MoneyButton = require('@moneybutton/react-money-button').default;
 
 axios.defaults.withCredentials = true;
@@ -62,11 +65,11 @@ const MoneyButtonLogin = () => {
     mbClient.setRefreshToken(refreshToken);
     //console.log('moneybyttondocs', bsv);
     //
-    let opReturnDataAsm = bsv.Script.buildSafeDataOut([
-      'reinhardt@moneybutton.com',
-      'utf8',
-      'Hello. How are you? Save this address to a mysql database',
-    ]).toASM();
+    //let opReturnDataAsm = bsv.Script.buildSafeDataOut([
+    //'reinhardt@moneybutton.com',
+    //'utf8',
+    //'Hello. How are you? Save this address to a mysql database',
+    //]).toASM();
 
     //while (opReturnDataAsm.charAt(0) === '0') {
     //opReturnDataAsm = opReturnDataAsm.substring(1);

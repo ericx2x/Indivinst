@@ -10,9 +10,10 @@
 
 # config
 /config
-config
 /config/secret.json
-config/secret.json
+/config/configFront.json
+/client/src/config
+/client/src/config/configFront.json
 
 # production
 /build

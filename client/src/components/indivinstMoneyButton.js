@@ -4,7 +4,11 @@ import {
 } from '../utils/bpagePipelineHelper';
 
 const {MoneyButtonClient} = require('@moneybutton/api-client');
-const mbClient = new MoneyButtonClient('ab0a912ef51c1cc9bd6d7d9433fbc3c0'); //store this id in a new money button app after testing is done//oauth identifier
+const moneyButtonKey =
+  typeof window !== 'undefined' && !window.location.href.includes('localhost')
+    ? config.moneybuttonProductionWallet
+    : config.moneybuttonLocalhostWallet;
+const mbClient = new MoneyButtonClient(moneyButtonKey);
 const refreshToken = mbClient.getRefreshToken();
 let bsv = require('bsv');
 let MoneyButton = require('@moneybutton/react-money-button').default;
