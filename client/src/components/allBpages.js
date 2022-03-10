@@ -33,7 +33,7 @@ const AllBpages = props => {
   return (
     <div className="allbpages">
       <div className="header">
-        <h1>All Bpages</h1>
+        <h1>All Paymails</h1>
         <br />
       </div>
       {bpages.map((bpage, index) => (

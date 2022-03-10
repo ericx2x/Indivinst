@@ -28,7 +28,7 @@ const App = () => {
   const [activeMenu, setActiveMenu] = useState('');
   const [pinBpages, setPinBpages] = useState([]);
   const [Authenticated, setAuthenticated] = useState(
-    window.localStorage.getItem('mb_js_client:oauth_access_token') !== ''
+    window.localStorage.getItem('mb_js_client:oauth_state') 
       ? true
       : false,
   );
@@ -137,8 +137,8 @@ const App = () => {
                               setBalance={setBalance}
                             />
                             <li className="pure-menu-item" key="1">
-                              <a className="pure-menu-link" href={`/allBpages`}>
-                                All Bpages
+                              <a className="pure-menu-link" href={`/listPaymails`}>
+                                List Paymails
                               </a>
                             </li>
                             {pinBpages.map((bpage, index) => {
@@ -175,7 +175,7 @@ const App = () => {
                           )}
                         />
                         <Route
-                          path={'/allbpages'}
+                          path={'/listPaymails'}
                           render={routeProps => (
                             <AllBpages
                               {...routeProps}

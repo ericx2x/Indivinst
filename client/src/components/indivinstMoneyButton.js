@@ -65,7 +65,7 @@ const IndivinstMoneyButton = ({message, baseURL, params}) => {
             //<button onClick={onbuttonclick}>Button to test</button>
   return (
     <div className="homepage">
-      <h2>IndivinstMoneyButton</h2>
+      {/*<h2>IndivinstMoneyButton</h2>*/}
 
       <MoneyButton//TODO: this moneybutton makes the page keep loading
         to={opReturnData} //address of an address when sending a tx back to reinhardt@moneybutton.com

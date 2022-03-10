@@ -55,22 +55,25 @@ const Bpages = props => {
   //console.log('Id', Id);
 
   useEffect(async () => {
-    const {id, name} = await mbClient.getIdentity();
-    console.log(`The id is ${id} and the name is ${name}`);
+    try {
+      const {id} = await mbClient.getIdentity();
+      //console.log(`The id is ${id} and the name is ${name}`);
 
-    const {id: userId} = await mbClient.getIdentity();
-    const profile = await mbClient.getUserProfile(userId);
-    console.log('x', profile);
-    if (profile.primaryPaymail === paths[0]) setOnUserPage(true);
+      const profile = await mbClient.getUserProfile(id.userId);
+      //console.log('x', profile);
+      if (profile.primaryPaymail === paths[0]) setOnUserPage(true);
 
-    setChildBpages([]); //This line resolves a bug where the childbpages dont render. Not sure why. Guess you have to do this and it's a weird oddity of React.
-    const response = await getBpageData(props.baseURL, props.match.params);
-    afterBpageGet(response);
-
-    if (response.data[0]) {
-      //const apiData = await retrieveTxIdData(response.data[0].transaction_id);
-      //console.log('retrieveTxIdData', apiData);
-      //(apiData && apiData.vout[0].scriptPubKey.opReturn && apiData.vout[0].scriptPubKey.opReturn.parts[2]) ?  setValue(apiData.vout[0].scriptPubKey.opReturn.parts[2]) : setValue("Error: Null OP Return retrival") ;
+      //if (response.data[0]) {
+        ////const apiData = await retrieveTxIdData(response.data[0].transaction_id);
+        ////console.log('retrieveTxIdData', apiData);
+        ////(apiData && apiData.vout[0].scriptPubKey.opReturn && apiData.vout[0].scriptPubKey.opReturn.parts[2]) ?  setValue(apiData.vout[0].scriptPubKey.opReturn.parts[2]) : setValue("Error: Null OP Return retrival") ;
+      //}
+    } catch (error) {
+      setOnUserPage(false);
+    } finally {
+      setChildBpages([]); //This line resolves a bug where the childbpages dont render. Not sure why. Guess you have to do this and it's a weird oddity of React.
+      const response = await getBpageData(props.baseURL, props.match.params);
+      afterBpageGet(response);
     }
   }, []);
 

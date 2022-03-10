@@ -36,6 +36,7 @@ const QuickLogin = props => {
       window.location.pathname.includes('oauth-response-web') &&
       mbClient.handleAuthorizationResponse()
     ) {
+      //TODO: below may not be needed. WE can just fetch this data from cookies. Probably delete. Instead lets just replace this function and do the above if statement in it's place?
       const {id: userId} = await mbClient.getIdentity();
       const profile = await mbClient.getUserProfile(userId);
       const balance = await mbClient.getBalance(userId);
@@ -95,15 +96,14 @@ const QuickLogin = props => {
 
   return (
     <div>
-      {!Authenticated && (
+      {!Authenticated ? (
         <button
           className="pure-button quickLog pure-button-primary logout-button"
           onClick={e => handleMBRequestAuthorization(e)}
           alt="MoneyButton Login">
           Login
         </button>
-      )}
-      {Authenticated && (
+      ) : (
         <button
           className="pure-button quickLog pure-button-primary logout-button"
           onClick={handleLogout}>
