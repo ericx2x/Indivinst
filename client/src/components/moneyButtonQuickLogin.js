@@ -14,6 +14,10 @@ const moneyButtonKey =
   typeof window !== 'undefined' && !window.location.href.includes('localhost')
     ? config.moneybuttonProductionWallet
     : config.moneybuttonLocalhostWallet;
+const moneyButtonRedirect =
+  typeof window !== 'undefined' && !window.location.href.includes('localhost')
+    ? 'https://indivinst.com/oauth-response-web'
+    : 'http://localhost:9008/oauth-response-web';
 const mbClient = new MoneyButtonClient(moneyButtonKey);
 
 //var sha256 = require('sha256');
@@ -76,7 +80,7 @@ const QuickLogin = props => {
   const handleMBRequestAuthorization = () => {
     mbClient.requestAuthorization(
       'auth.user_identity:read users.profiles:read users.balance:read',
-      'http://localhost:9008/oauth-response-web',
+      moneyButtonRedirect,
     );
     setAuthenticated(true);
   };
