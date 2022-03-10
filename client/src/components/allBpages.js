@@ -9,7 +9,7 @@ const AllBpages = props => {
   const {Authenticated} = useContext(AuthenticatedContext);
 
   useEffect(() => {
-    if (Authenticated) {
+    if (Authenticated) {//TODO: this doesn't is not needed but confirm it's working on bpages and then remove this functionality to just display all bpages/paymails
       fetch(`${props.baseURL}/api/bpages`)
         .then(res => res.json())
         .then(resbpages => {

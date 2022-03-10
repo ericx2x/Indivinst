@@ -56,10 +56,8 @@ const Bpages = props => {
 
   useEffect(async () => {
     try {
-      const {id} = await mbClient.getIdentity();
-      //console.log(`The id is ${id} and the name is ${name}`);
-
-      const profile = await mbClient.getUserProfile(id.userId);
+      const {id: userId} = await mbClient.getIdentity();
+      const profile = await mbClient.getUserProfile(userId);
       //console.log('x', profile);
       if (profile.primaryPaymail === paths[0]) setOnUserPage(true);
 
@@ -69,7 +67,6 @@ const Bpages = props => {
         ////(apiData && apiData.vout[0].scriptPubKey.opReturn && apiData.vout[0].scriptPubKey.opReturn.parts[2]) ?  setValue(apiData.vout[0].scriptPubKey.opReturn.parts[2]) : setValue("Error: Null OP Return retrival") ;
       //}
     } catch (error) {
-      setOnUserPage(false);
     } finally {
       setChildBpages([]); //This line resolves a bug where the childbpages dont render. Not sure why. Guess you have to do this and it's a weird oddity of React.
       const response = await getBpageData(props.baseURL, props.match.params);
