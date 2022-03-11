@@ -1,7 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {
-  collectIdAndOrPostEachBranch,
-} from '../utils/bpagePipelineHelper';
+import {collectIdAndOrPostEachBranch} from '../utils/bpagePipelineHelper';
 
 const {MoneyButtonClient} = require('@moneybutton/api-client');
 var config = require('../config/configFront.json');
@@ -32,7 +30,6 @@ const IndivinstMoneyButton = ({message, baseURL, params}) => {
     //setBalance(JSON.stringify(balance));
   };
 
-
   useEffect(() => {
     retrieveMbData();
     mbClient.setRefreshToken(refreshToken);
@@ -46,28 +43,28 @@ const IndivinstMoneyButton = ({message, baseURL, params}) => {
     setOpReturnData(opReturnDataAsm);
   }, [message]);
 
-  //function onbuttonclick() {
-    //collectIdAndOrPostEachBranch(
-      //'this was saved from the button on click test',
-      //true,
-      //baseURL,
-      //params,
-      //'00dce72a9ec6e9abbd4e69161fe9e74504f5eb91cb4c775b03e05a581d5e6035',
-    //);
-  //}
+  function onbuttonclick() {
+    collectIdAndOrPostEachBranch(
+      message,
+      true,
+      baseURL,
+      params,
+      '00dce72a9ec6e9abbd4e69161fe9e74504f5eb91cb4c775b03e05a581d5e6035',//just a random tx id for testing
+    );
+  }
 
   function myOnPaymentCallback(payment) {
-    collectIdAndOrPostEachBranch(message, true, baseURL, params, payment.txid);// For some reason this keeps the page constaly on inital load
+    collectIdAndOrPostEachBranch(message, true, baseURL, params, payment.txid); // For some reason this keeps the page constaly on inital load
 
     //console.log('A payment has occurred!', payment);
   }
 
-            //<button onClick={onbuttonclick}>Button to test</button>
   return (
     <div className="homepage">
       {/*<h2>IndivinstMoneyButton</h2>*/}
 
-      <MoneyButton//TODO: this moneybutton makes the page keep loading
+      <button onClick={onbuttonclick}>Button to test</button>
+      <MoneyButton //TODO: this moneybutton makes the page keep loading
         to={opReturnData} //address of an address when sending a tx back to reinhardt@moneybutton.com
         amount={'0.0000035'} //increase/decrease this depending on the date miners may not accept transactions that are too low.
         currency={'BSV'}
