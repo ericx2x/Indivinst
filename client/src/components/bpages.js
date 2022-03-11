@@ -58,8 +58,10 @@ const Bpages = props => {
     try {
       const {id: userId} = await mbClient.getIdentity();
       const profile = await mbClient.getUserProfile(userId);
-      //console.log('x', profile);
-      if (profile.primaryPaymail === paths[0]) setOnUserPage(true);
+      if (profile.primaryPaymail === paths[0]) {
+        console.log('yes');
+        setOnUserPage(true);
+      }
 
       //if (response.data[0]) {
         ////const apiData = await retrieveTxIdData(response.data[0].transaction_id);
@@ -67,6 +69,7 @@ const Bpages = props => {
         ////(apiData && apiData.vout[0].scriptPubKey.opReturn && apiData.vout[0].scriptPubKey.opReturn.parts[2]) ?  setValue(apiData.vout[0].scriptPubKey.opReturn.parts[2]) : setValue("Error: Null OP Return retrival") ;
       //}
     } catch (error) {
+      console.log(error);
     } finally {
       setChildBpages([]); //This line resolves a bug where the childbpages dont render. Not sure why. Guess you have to do this and it's a weird oddity of React.
       const response = await getBpageData(props.baseURL, props.match.params);

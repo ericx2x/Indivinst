@@ -69,7 +69,7 @@ const IndivinstMoneyButton = ({message, baseURL, params}) => {
 
       <MoneyButton//TODO: this moneybutton makes the page keep loading
         to={opReturnData} //address of an address when sending a tx back to reinhardt@moneybutton.com
-        amount={'0.0000055'} //increase/decrease this depending on the date miners may not accept transactions that are too low.
+        amount={'0.0000035'} //increase/decrease this depending on the date miners may not accept transactions that are too low.
         currency={'BSV'}
         onPayment={myOnPaymentCallback}
       />
