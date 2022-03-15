@@ -4,7 +4,7 @@ var cors = require('cors');
 //var sha256  = require('sha256');
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
-var mysql = require('mysql');
+var mysql = require('mysql2');
 var config = require('../config/secret.json');
 
 var options = {

@@ -127,7 +127,7 @@ const Bpages = props => {
       getChildBpages(response.data[0]);
       setDateModified(strippedDateModified);
       setDateCreated(strippedDateCreated);
-      setValue(unescape(response.data[0].message));
+      setValue(unescape(response.data[0].message).replace(/ ' /g, " \\' "));
       setTxId(response.data[0].transaction_id);
       setIsPrivateBpage(response.data[0].private);
       setDataCurrentBpage(response);
@@ -136,10 +136,10 @@ const Bpages = props => {
           setTimeout(() => {
             setVerificationMessage('In Private Mode!');
           }, 2000);
-          setValue(unescape(response.data[0].message));
+          setValue(unescape(response.data[0].message).replace(/ ' /g, " \\' "));
           setPrivateText('Private Mode Is On');
         } else if (!response.data[0].private) {
-          setValue(unescape(response.data[0].message));
+          setValue(unescape(response.data[0].message).replace(/ ' /g, " \\' "));
           setPrivateText('Private Mode Is Off');
         }
       };
@@ -405,7 +405,7 @@ const Bpages = props => {
             !Authenticated && onUserPage ? 'makeCenter' : ''
           }`}>
           {(!isPrivateBpage || (Authenticated && onUserPage)) && (
-            <div dangerouslySetInnerHTML={{__html: unescape(value)}} />
+            <div dangerouslySetInnerHTML={{__html: unescape(value).replace(/ ' /g, " \\' ")}} />
           )}
           <p>Date Modified: {dateModified}</p>
           <p>Date Created: {dateCreated}</p>
@@ -456,7 +456,7 @@ const Bpages = props => {
                 <div className="pure-control-group">
                   <div className="pure-control-group">
                     <textarea
-                      onChange={event => setValue(unescape(event.target.value))}
+                      onChange={event => setValue(unescape(event.target.value).replace(/ ' /g, " \\' "))}
                       onKeyPress={event => handleKeyPress(event)}
                       id="message_textarea"
                       type="text"
@@ -467,7 +467,7 @@ const Bpages = props => {
                   </div>
                 </div>
                 <IndivinstMoneyButton
-                  message={value}
+                  message={unescape(value).replace(/ ' /g, " \\' ")}
                   baseURL={props.baseURL}
                   params={props.match.params}
                   txid={txid.transaction_id}

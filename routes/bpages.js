@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 //var cors = require('cors');
 var app = express();
-var mysql = require('mysql');
+var mysql = require('mysql2');
 var sha256 = require('sha256');
 var config = require('../config/secret.json');
 
@@ -82,7 +82,6 @@ router.get('/', function (req, res, next) {
     },
   );
 });
-
 
 router.get('/publicBpages', function (req, res, next) {
   con.query(
@@ -175,11 +174,14 @@ router.get('/children/:bpagesId', function (req, res, next) {
 
 router.post('/:bpagesId', function (req, res, next) {
   con.query(
-    `INSERT IGNORE INTO bpages (name, message, transaction_id, pid, namepid) VALUES ('${req.params.bpagesId.toLowerCase()}', '${
-      req.body.messageData
-    }', '${req.body.txid}', '${req.body.pid}', '${req.params.bpagesId} ${
-      req.body.pid
-    }')`,
+    'INSERT IGNORE INTO bpages (name, message, transaction_id, pid, namepid) VALUES (?, ?, ?, ?, ?)',
+    [
+      req.params.bpagesId.toLowerCase(),
+      req.body.messageData,
+      req.body.txid,
+      req.body.pid,
+      '${req.params.bpagesId} ${req.body.pid}',
+    ],
     function (err, result, fields) {
       if (err) throw err;
       //console.log('txid', req.body.txid);
@@ -193,7 +195,8 @@ router.post('/:bpagesId', function (req, res, next) {
 
 router.post('/update/:bpagesId/:pid', function (req, res, next) {
   con.query(
-    `UPDATE bpages SET message='${req.body.messageData}', transaction_id='${req.body.txid}' WHERE namepid='${req.params.bpagesId} ${req.params.pid}';`,
+    `UPDATE bpages SET message=?, transaction_id='${req.body.txid}' WHERE namepid='${req.params.bpagesId} ${req.params.pid}';`,
+    [req.body.messageData],
     function (err, result, fields) {
       //console.log('msgdata', req.body.txid);
       //console.log('namepid', req.params.bpagesId + ' ' + req.params.pid);
@@ -205,7 +208,8 @@ router.post('/update/:bpagesId/:pid', function (req, res, next) {
 
 router.post('/updatePid/:bpagesId/:newPid/:id', function (req, res, next) {
   con.query(
-    `UPDATE bpages SET name='${req.params.bpagesId}', message='${req.body.messageData}', pid='${req.params.newPid}', namepid='${req.params.bpagesId} ${req.params.newPid}' WHERE id='${req.params.id}';`,
+    `UPDATE bpages SET name='${req.params.bpagesId}', message=?, pid='${req.params.newPid}', namepid='${req.params.bpagesId} ${req.params.newPid}' WHERE id='${req.params.id}';`,
+    [req.body.messageData],
     function (err, result, fields) {
       if (err) throw err;
       res.send(result);
