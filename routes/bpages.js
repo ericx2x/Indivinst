@@ -195,8 +195,12 @@ router.post('/:bpagesId', function (req, res, next) {
 
 router.post('/update/:bpagesId/:pid', function (req, res, next) {
   con.query(
-    `UPDATE bpages SET message=?, transaction_id='${req.body.txid}' WHERE namepid='${req.params.bpagesId} ${req.params.pid}';`,
-    [req.body.messageData],
+    `UPDATE bpages SET message=?, transaction_id=? WHERE namepid=?;`,
+    [
+      req.body.messageData,
+      req.body.txid,
+      `${req.params.bpagesId} ${req.params.pid}`,
+    ],
     function (err, result, fields) {
       //console.log('msgdata', req.body.txid);
       //console.log('namepid', req.params.bpagesId + ' ' + req.params.pid);
@@ -208,8 +212,14 @@ router.post('/update/:bpagesId/:pid', function (req, res, next) {
 
 router.post('/updatePid/:bpagesId/:newPid/:id', function (req, res, next) {
   con.query(
-    `UPDATE bpages SET name='${req.params.bpagesId}', message=?, pid='${req.params.newPid}', namepid='${req.params.bpagesId} ${req.params.newPid}' WHERE id='${req.params.id}';`,
-    [req.body.messageData],
+    `UPDATE bpages SET name=?, message=?, pid=?, namepid=? WHERE id=?;`,
+    [
+      req.params.bpagesId,
+      req.body.messageData,
+      req.params.newPid,
+      '${req.params.bpagesId} ${req.params.newPid}',
+      req.params.id,
+    ],
     function (err, result, fields) {
       if (err) throw err;
       res.send(result);
