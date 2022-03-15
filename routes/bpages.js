@@ -217,7 +217,7 @@ router.post('/updatePid/:bpagesId/:newPid/:id', function (req, res, next) {
       req.params.bpagesId,
       req.body.messageData,
       req.params.newPid,
-      '${req.params.bpagesId} ${req.params.newPid}',
+      `${req.params.bpagesId} ${req.params.newPid}`,
       req.params.id,
     ],
     function (err, result, fields) {

@@ -59,14 +59,13 @@ const Bpages = props => {
       const {id: userId} = await mbClient.getIdentity();
       const profile = await mbClient.getUserProfile(userId);
       if (profile.primaryPaymail === paths[0]) {
-        console.log('yes');
         setOnUserPage(true);
       }
 
       //if (response.data[0]) {
-        ////const apiData = await retrieveTxIdData(response.data[0].transaction_id);
-        ////console.log('retrieveTxIdData', apiData);
-        ////(apiData && apiData.vout[0].scriptPubKey.opReturn && apiData.vout[0].scriptPubKey.opReturn.parts[2]) ?  setValue(apiData.vout[0].scriptPubKey.opReturn.parts[2]) : setValue("Error: Null OP Return retrival") ;
+      ////const apiData = await retrieveTxIdData(response.data[0].transaction_id);
+      ////console.log('retrieveTxIdData', apiData);
+      ////(apiData && apiData.vout[0].scriptPubKey.opReturn && apiData.vout[0].scriptPubKey.opReturn.parts[2]) ?  setValue(apiData.vout[0].scriptPubKey.opReturn.parts[2]) : setValue("Error: Null OP Return retrival") ;
       //}
     } catch (error) {
       console.log(error);
@@ -405,7 +404,11 @@ const Bpages = props => {
             !Authenticated && onUserPage ? 'makeCenter' : ''
           }`}>
           {(!isPrivateBpage || (Authenticated && onUserPage)) && (
-            <div dangerouslySetInnerHTML={{__html: unescape(value).replace(/ ' /g, " \\' ")}} />
+            <div
+              dangerouslySetInnerHTML={{
+                __html: unescape(value).replace(/ ' /g, " \\' "),
+              }}
+            />
           )}
           <p>Date Modified: {dateModified}</p>
           <p>Date Created: {dateCreated}</p>
@@ -456,7 +459,11 @@ const Bpages = props => {
                 <div className="pure-control-group">
                   <div className="pure-control-group">
                     <textarea
-                      onChange={event => setValue(unescape(event.target.value).replace(/ ' /g, " \\' "))}
+                      onChange={event =>
+                        setValue(
+                          unescape(event.target.value).replace(/ ' /g, " \\' "),
+                        )
+                      }
                       onKeyPress={event => handleKeyPress(event)}
                       id="message_textarea"
                       type="text"
