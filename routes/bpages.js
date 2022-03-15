@@ -180,7 +180,7 @@ router.post('/:bpagesId', function (req, res, next) {
       req.body.messageData,
       req.body.txid,
       req.body.pid,
-      '${req.params.bpagesId} ${req.body.pid}',
+      `${req.params.bpagesId} ${req.body.pid}`,
     ],
     function (err, result, fields) {
       if (err) throw err;
