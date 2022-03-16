@@ -22,15 +22,25 @@ const IndivinstMoneyButton = ({message, baseURL, params}) => {
   const retrieveMbData = async () => {
     window.location.pathname.includes('oauth-response-web') &&
       mbClient.handleAuthorizationResponse();
-    //const {id: userId} = await mbClient.getIdentity();
-    //const profile = await mbClient.getUserProfile(userId);
-    //const balance = await mbClient.getBalance(userId);
+    const {id: userId} = await mbClient.getIdentity();
+    const profile = await mbClient.getUserProfile(userId);
+    const balance = await mbClient.getBalance(userId);
+    console.log('id', userId);
+    console.log('profile', profile);
+    console.log('balance', balance);
     //setId(userId);
     //setUserProfile(JSON.stringify(profile));
     //setBalance(JSON.stringify(balance));
   };
 
-  useEffect(() => {
+  useEffect(async () => {
+    console.log('ixd');
+    const {id: userId} = await mbClient.getIdentity();
+    const profile = await mbClient.getUserProfile(userId);
+    const balance = await mbClient.getBalance(userId);
+    console.log('id', userId);
+    console.log('profile', profile);
+    console.log('balance', balance);
     retrieveMbData();
     mbClient.setRefreshToken(refreshToken);
 

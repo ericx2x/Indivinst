@@ -6,23 +6,14 @@ axios.defaults.withCredentials = true;
 
 const AllBpages = props => {
   const [bpages, setBpages] = useState([]);
-  const {Authenticated} = useContext(AuthenticatedContext);
 
   useEffect(() => {
-    if (Authenticated) {//TODO: this doesn't is not needed but confirm it's working on bpages and then remove this functionality to just display all bpages/paymails
-      fetch(`${props.baseURL}/api/bpages`)
-        .then(res => res.json())
-        .then(resbpages => {
-          setBpages(resbpages);
-        });
-    } else {
       fetch(`${props.baseURL}/api/bpages/publicBpages`)
         .then(res => res.json())
         .then(resbpages => {
           setBpages(resbpages);
         });
-    }
-  }, [Authenticated]);
+  }, []);
 
   const toTitleCase = str => {
     return str.replace(/\w\S*/g, function (txt) {

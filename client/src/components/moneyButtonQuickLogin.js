@@ -63,6 +63,9 @@ const QuickLogin = props => {
 
   useEffect(() => {
     getMBData();
+    //console.log('userProfile', UserProfile);
+    //console.log('balance', Balance);
+    //console.log('userId', Id);
   }, []);
 
   //useEffect(async () => {

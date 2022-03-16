@@ -11,6 +11,7 @@ import {retrievePaths} from './utils/bpagePipelineHelper';
 import Bpages from './components/bpages';
 //import MoneyButtonLogin from './components/moneyButtonLogin';
 import Login from './components/login';
+import Instructions from './components/instructions';
 import AllBpages from './components/allBpages';
 import MoneyButtonQuickLogin from './components/moneyButtonQuickLogin';
 import MetaHead from './components/MetaHead';
@@ -28,9 +29,7 @@ const App = () => {
   const [activeMenu, setActiveMenu] = useState('');
   const [pinBpages, setPinBpages] = useState([]);
   const [Authenticated, setAuthenticated] = useState(
-    window.localStorage.getItem('mb_js_client:oauth_state') 
-      ? true
-      : false,
+    window.localStorage.getItem('mb_js_client:oauth_state') ? true : false,
   );
   const AuthenticatedContextValue = {Authenticated, setAuthenticated};
   const [Id, setId] = useState('');
@@ -137,8 +136,17 @@ const App = () => {
                               setBalance={setBalance}
                             />
                             <li className="pure-menu-item" key="1">
-                              <a className="pure-menu-link" href={`/listPaymails`}>
+                              <a
+                                className="pure-menu-link"
+                                href={`/listPaymails`}>
                                 List Paymails
+                              </a>
+                            </li>
+                            <li className="pure-menu-item" key="1">
+                              <a
+                                className="pure-menu-link"
+                                href={`/instructions`}>
+                                Instructions
                               </a>
                             </li>
                             {pinBpages.map((bpage, index) => {
@@ -178,6 +186,16 @@ const App = () => {
                           path={'/listPaymails'}
                           render={routeProps => (
                             <AllBpages
+                              {...routeProps}
+                              baseURL={baseURL}
+                              toTitleCase={toTitleCase()}
+                            />
+                          )}
+                        />
+                        <Route
+                          path={'/instructions'}
+                          render={routeProps => (
+                            <Instructions
                               {...routeProps}
                               baseURL={baseURL}
                               toTitleCase={toTitleCase()}
