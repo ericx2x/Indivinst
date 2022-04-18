@@ -1,14 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {collectIdAndOrPostEachBranch} from '../utils/bpagePipelineHelper';
 
-const {MoneyButtonClient} = require('@moneybutton/api-client');
-var config = require('../config/configFront.json');
-const moneyButtonKey =
-  typeof window !== 'undefined' && !window.location.href.includes('localhost')
-    ? config.moneybuttonProductionWallet
-    : config.moneybuttonLocalhostWallet;
-const mbClient = new MoneyButtonClient(moneyButtonKey);
-const refreshToken = mbClient.getRefreshToken();
 let bsv = require('bsv');
 let MoneyButton = require('@moneybutton/react-money-button').default;
 
@@ -19,31 +11,8 @@ const IndivinstMoneyButton = ({message, baseURL, params}) => {
   //const [balance, setBalance] = useState(0);
   const [opReturnData, setOpReturnData] = useState('');
 
-  const retrieveMbData = async () => {
-    window.location.pathname.includes('oauth-response-web') &&
-      mbClient.handleAuthorizationResponse();
-    const {id: userId} = await mbClient.getIdentity();
-    const profile = await mbClient.getUserProfile(userId);
-    const balance = await mbClient.getBalance(userId);
-    console.log('id', userId);
-    console.log('profile', profile);
-    console.log('balance', balance);
-    //setId(userId);
-    //setUserProfile(JSON.stringify(profile));
-    //setBalance(JSON.stringify(balance));
-  };
 
-  useEffect(async () => {
-    console.log('ixd');
-    const {id: userId} = await mbClient.getIdentity();
-    const profile = await mbClient.getUserProfile(userId);
-    const balance = await mbClient.getBalance(userId);
-    console.log('id', userId);
-    console.log('profile', profile);
-    console.log('balance', balance);
-    retrieveMbData();
-    mbClient.setRefreshToken(refreshToken);
-
+  useEffect(() => {
     let opReturnDataAsm = bsv.Script.buildSafeDataOut([
       'reinhardt@moneybutton.com',
       'utf8',
@@ -59,7 +28,7 @@ const IndivinstMoneyButton = ({message, baseURL, params}) => {
       true,
       baseURL,
       params,
-      '00dce72a9ec6e9abbd4e69161fe9e74504f5eb91cb4c775b03e05a581d5e6035',//just a random tx id for testing
+      '00dce72a9ec6e9abbd4e69161fe9e74504f5eb91cb4c775b03e05a581d5e6035', //just a random tx id for testing
     );
   }
 
@@ -68,6 +37,25 @@ const IndivinstMoneyButton = ({message, baseURL, params}) => {
 
     //console.log('A payment has occurred!', payment);
   }
+  const getDustLimit = x => {
+    const s = 0.0000000000001; // s = serialized size of transaction output //No clue what this number means.. time to lookup serialized on google.
+
+    const d = 300; //dustlimitfactor, percent value between 300 and 0, default: 300//So just keep it 300?
+
+    const r = 250; //dustrelayfee, default: default-minrelaytxfee, 250 as of v1.0.8
+
+    const m = 148; //148, minimum bytes of spendable input
+
+    console.log('dustLimit', (d * ((r * (s + m)) / 1000)) / 100);
+
+    return (d * ((r * (s + m)) / 1000)) / 100;
+
+    //Note that the division by 100 as the dustlimitfactor specifies a percentage value.
+    //
+    //A satoshi is this number apparently when represented as a decimal to a bitcoin
+    //0.00000001
+  };
+  //getDustLimit();
 
   return (
     <div className="homepage">
@@ -76,7 +64,7 @@ const IndivinstMoneyButton = ({message, baseURL, params}) => {
       <button onClick={onbuttonclick}>Button to test</button>
       <MoneyButton //TODO: this moneybutton makes the page keep loading
         to={opReturnData} //address of an address when sending a tx back to reinhardt@moneybutton.com
-        amount={'0.0000035'} //increase/decrease this depending on the date miners may not accept transactions that are too low.
+        amount={'0.00000273'} //increase/decrease this depending on the date miners may not accept transactions that are too low.
         currency={'BSV'}
         onPayment={myOnPaymentCallback}
       />

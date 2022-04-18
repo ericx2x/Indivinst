@@ -13,6 +13,7 @@ import {
   getBpageData,
 } from '../utils/bpagePipelineHelper';
 //import {getCookie} from '../utils/cookieHelper';
+import {refreshTokenHelper} from '../utils/moneyButtonHelper';
 
 axios.defaults.withCredentials = true;
 
@@ -34,12 +35,14 @@ const Bpages = props => {
   const [dateCreated, setDateCreated] = useState(null);
   const [childBpages, setChildBpages] = useState([]);
   const [value, setValue] = useState('');
+  const [valueDelay, setValueDelay] = useState(false);
   const [dataCurrentBpage, setDataCurrentBpage] = useState({});
   const [onUserPage, setOnUserPage] = useState('');
+  const [stateRefreshToken, setStateRefreshToken] = useState('');
 
   const textAreaRef = useRef(null);
 
-  const {Authenticated} = useContext(AuthenticatedContext);
+  const {Authenticated, setAuthenticated} = useContext(AuthenticatedContext);
   //const {UserProfile} = useContext(UserProfileContext);
   //const {Id} = useContext(IdContext);
 
@@ -55,25 +58,31 @@ const Bpages = props => {
   //console.log('Id', Id);
 
   useEffect(async () => {
+    //TODO: wait 1 hour? play with token expiration? wait the 1 hour as well as make sure changing the expiration to be in the past works and causes no errors like before
+
+    //Dont need this line because have moneyButtonKey const clientIdForApi = window.localStorage.getItem('mb_js_client:oauth_access_token');
+
+    const refreshTokenForApi = window.localStorage.getItem(
+      'mb_js_client:oauth_refresh_token',
+    );
+    const refreshTokenForApiTest = '1816daabef9e9178c5c0a00a540fe058508dfddb73bf1904e00a934ea5708d7e';
+    //const clientIdForApi = 'ab0a912ef51c1cc9bd6d7d9433fbc3c0';
+
     try {
       const {id: userId} = await mbClient.getIdentity();
       const profile = await mbClient.getUserProfile(userId);
       if (profile.primaryPaymail === paths[0]) {
         setOnUserPage(true);
       }
-
-      //if (response.data[0]) {
-      ////const apiData = await retrieveTxIdData(response.data[0].transaction_id);
-      ////console.log('retrieveTxIdData', apiData);
-      ////(apiData && apiData.vout[0].scriptPubKey.opReturn && apiData.vout[0].scriptPubKey.opReturn.parts[2]) ?  setValue(apiData.vout[0].scriptPubKey.opReturn.parts[2]) : setValue("Error: Null OP Return retrival") ;
-      //}
     } catch (error) {
+      setAuthenticated(false);
       console.log(error);
     } finally {
       setChildBpages([]); //This line resolves a bug where the childbpages dont render. Not sure why. Guess you have to do this and it's a weird oddity of React.
       const response = await getBpageData(props.baseURL, props.match.params);
       afterBpageGet(response);
     }
+
   }, []);
 
   //function myOnPaymentCallback(payment) {
@@ -207,17 +216,17 @@ const Bpages = props => {
   //}, 2000);
   //};
 
-  //const formatDate = () => {
-  //var d = new Date(),
-  //month = '' + (d.getMonth() + 1),
-  //day = '' + d.getDate(),
-  //year = d.getFullYear();
+  const formatDate = () => {
+    var d = new Date(),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
 
-  //if (month.length < 2) month = '0' + month;
-  //if (day.length < 2) day = '0' + day;
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
 
-  //return [year, month, day].join('-');
-  //};
+    return [year, month, day].join('-');
+  };
 
   //const handleSubmit = e => {
   //let passedUpdateData = value;
@@ -459,10 +468,15 @@ const Bpages = props => {
                 <div className="pure-control-group">
                   <div className="pure-control-group">
                     <textarea
-                      onChange={event =>
+                      onChange={event =>{
+                        setTimeout(()=>{
+                          //TODO: finish thinking aout this code
+                          setValueDelay(true);
+                        },1000);
                         setValue(
                           unescape(event.target.value).replace(/ ' /g, " \\' "),
                         )
+                      }
                       }
                       onKeyPress={event => handleKeyPress(event)}
                       id="message_textarea"

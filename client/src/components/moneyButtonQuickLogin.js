@@ -1,4 +1,4 @@
-import React, {useEffect, useContext} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import axios from 'axios';
 import {
   AuthenticatedContext,
@@ -7,6 +7,7 @@ import {
   BalanceContext,
 } from '../Indivinst';
 //import {getCookie} from '../utils/cookieHelper';
+import {AuthUser} from '../utils/moneyButtonHelper';
 var config = require('../config/configFront.json');
 
 const {MoneyButtonClient} = require('@moneybutton/api-client');
@@ -14,10 +15,18 @@ const moneyButtonKey =
   typeof window !== 'undefined' && !window.location.href.includes('localhost')
     ? config.moneybuttonProductionWallet
     : config.moneybuttonLocalhostWallet;
+typeof window !== 'undefined' &&
+  !window.location.href.includes('oauth-response-web') &&
+  window.localStorage.setItem('currentPage', window.location.pathname);
+
+//const moneyButtonRedirect =
+//typeof window !== 'undefined' && window.localStorage.getItem('currentPage');
+
 const moneyButtonRedirect =
   typeof window !== 'undefined' && !window.location.href.includes('localhost')
     ? 'https://indivinst.com/oauth-response-web'
     : 'http://localhost:9008/oauth-response-web';
+
 const mbClient = new MoneyButtonClient(moneyButtonKey);
 
 //var sha256 = require('sha256');
@@ -25,66 +34,43 @@ const mbClient = new MoneyButtonClient(moneyButtonKey);
 axios.defaults.withCredentials = true;
 
 const QuickLogin = props => {
-  //TODO: create a previous location context to link a user back to their page after getting redirected by the oauth page
+  const [refreshState, setRefreshState] = useState(false);
+  setTimeout(() => {
+    setRefreshState(!refreshState);
+  }, 2000);
 
-  //const [id, setId] = useState('');
-  const {Id, setId} = useContext(IdContext);
   const {Authenticated, setAuthenticated} = useContext(AuthenticatedContext);
-  const {UserProfile, setUserProfile} = useContext(UserProfileContext);
-  const {Balance, setBalance} = useContext(BalanceContext);
 
-  //const mbPromise = MakeQuerablePromise(mbClient.handleAuthorizationResponse());
-
-  const getMBData = async () => {
-    if (
-      window.location.pathname.includes('oauth-response-web') &&
-      mbClient.handleAuthorizationResponse()
-    ) {
-      //TODO: below may not be needed. WE can just fetch this data from cookies. Probably delete. Instead lets just replace this function and do the above if statement in it's place?
-      const {id: userId} = await mbClient.getIdentity();
-      const profile = await mbClient.getUserProfile(userId);
-      const balance = await mbClient.getBalance(userId);
-      //console.log('resp', mbClient.handleAuthorizationResponse())
-      //console.log('res', res)
-      //console.log('id', userId);
-      //console.log('userProfile ', JSON.stringify(profile));
-      //console.log('balance ', JSON.stringify(balance));
-      setId(userId);
-      setUserProfile(JSON.stringify(profile));
-      setBalance(JSON.stringify(balance));
-      if (Balance && UserProfile && Id) return '';
-      //document.cookie = `username=${profile.primaryPaymail}`;
+  const setRefreshData = async () => {
+    try {
+      typeof window !== 'undefined' &&
+        window.localStorage.getItem('mb_js_client:oauth_state') &&
+        (await mbClient.authorizeWithAuthFlowResponse(
+          {
+            code: window.localStorage.getItem('mb_oauth_code'),
+            state: window.localStorage.getItem('mb_js_client:oauth_state'),
+          },
+          window.localStorage.getItem('mb_js_client:oauth_state'),
+          moneyButtonRedirect,
+        ));
+      const refreshToken = mbClient.getRefreshToken();
+      mbClient.setRefreshToken(refreshToken);
+    } catch (e) {
+      console.log('error: ', e);
     }
-    //mbClient.handleAuthorizationResponse().then(() => {
-    //mbClient.getIdentity();
-    //console.log('idi', mbClient.getIdentity())
-    //});
   };
 
   useEffect(() => {
-    getMBData();
-    //console.log('userProfile', UserProfile);
-    //console.log('balance', Balance);
-    //console.log('userId', Id);
+    setRefreshData();
   }, []);
-
-  //useEffect(async () => {
-  ////const oauthState = localStorage.getItem('mb_js_client:oauth_state');
-  ////if (oauthState !== '') {
-  //const {id} = await mbClient.getIdentity();
-  ////console.log(`The id is ${id} and the name is ${name}`);
-
-  ////if (id !== '') {
-  ////setAuthenticated(true);
-  ////}
-  ////setUserProfile(UserProfile);
-  //}, [Id, UserProfile, Balance]);
 
   const handleMBRequestAuthorization = () => {
     mbClient.requestAuthorization(
       'auth.user_identity:read users.profiles:read users.balance:read',
       moneyButtonRedirect,
     );
+    setRefreshData();
+    //AuthUser();
     setAuthenticated(true);
   };
 
