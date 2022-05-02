@@ -65,7 +65,8 @@ const Bpages = props => {
     const refreshTokenForApi = window.localStorage.getItem(
       'mb_js_client:oauth_refresh_token',
     );
-    const refreshTokenForApiTest = '1816daabef9e9178c5c0a00a540fe058508dfddb73bf1904e00a934ea5708d7e';
+    const refreshTokenForApiTest =
+      '1816daabef9e9178c5c0a00a540fe058508dfddb73bf1904e00a934ea5708d7e';
     //const clientIdForApi = 'ab0a912ef51c1cc9bd6d7d9433fbc3c0';
 
     try {
@@ -82,7 +83,6 @@ const Bpages = props => {
       const response = await getBpageData(props.baseURL, props.match.params);
       afterBpageGet(response);
     }
-
   }, []);
 
   //function myOnPaymentCallback(payment) {
@@ -468,16 +468,21 @@ const Bpages = props => {
                 <div className="pure-control-group">
                   <div className="pure-control-group">
                     <textarea
-                      onChange={event =>{
-                        setTimeout(()=>{
-                          //TODO: finish thinking aout this code
+                      onChange={event => {
+                        if (!valueDelay) {
                           setValueDelay(true);
-                        },1000);
-                        setValue(
-                          unescape(event.target.value).replace(/ ' /g, " \\' "),
-                        )
-                      }
-                      }
+                          setValue(
+                            unescape(event.target.value).replace(
+                              / ' /g,
+                              " \\' ",
+                            ),
+                          );
+                          setTimeout(() => {
+                            //TODO: finish thinking aout this code
+                            setValueDelay(false);
+                          }, 1000);
+                        }
+                      }}
                       onKeyPress={event => handleKeyPress(event)}
                       id="message_textarea"
                       type="text"
